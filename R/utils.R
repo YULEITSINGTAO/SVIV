@@ -1,0 +1,108 @@
+##################### Exported utility functions
+
+#' Extra Homo sapiens hg38 genome coordinates
+#' @description
+#' - [hg38coord] returns a tibble of all hg38 chromosome coordinates
+#' - [hg38special] returns a tibble of all hg38 special region coordinates
+#' @param muted bool, print additional explanation of columns?
+#'
+#' @return a tibble coordinates in bed-like format
+#' @export
+#'
+#' @examples
+#' hg38coord()
+hg38coord <- function(muted = FALSE){
+    stopifnot(is.logical(muted) && length(muted) == 1)
+    hg38 <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38.bed"),
+                            col_names = FALSE, show_col_types = FALSE, progress = FALSE)
+    names(hg38) <- c("Chrom", "Start", "End", "Abs_start", "Abs_end")
+    if(!muted) {
+        cat(
+            "Returning human hg38 genome coordinates\n",
+            tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
+            tblue("Start:"), "Chromosome start position\n",
+            tblue("End:"), "Chromosome end position\n",
+            tblue("Abs_start:"), "Chromosome absolute cumulative start position\n",
+            tblue("Abs_end:"), "Chromosome absolute cumulative end position\n"
+        )
+    }
+    hg38
+}
+
+#' @rdname hg38coord
+#' @export
+#' @examples
+#' hg38specail()
+hg38special <- function(muted = FALSE){
+    stopifnot(is.logical(muted) && length(muted) == 1)
+    hg38_special <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38_specail_regions.bed"),
+                                    col_names = FALSE, show_col_types = FALSE, progress = FALSE)
+    names(hg38_special) <- c("Chrom", "Start", "End", "Region")
+    if(!muted) {
+        cat(
+            "Returning human hg38 genome coordinates\n",
+            tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
+            tblue("Start:"), "Chromosome start position\n",
+            tblue("End:"), "Chromosome end position\n",
+            tblue("Region:"), "Chromosome special region type, like centromere, telomere, Low Mappability, etc.\n"
+        )
+    }
+    hg38_special
+}
+
+
+
+#' Get or set options for VCFComparison package
+#' @param option string, what option to get or set
+#' @param value any R object, the value you want to set for the option.
+#' @details If value is not provided, get the current value of this option, if
+#' non-NULL value is provided, set the option with this value. If the value is not
+#' provided and the option value is unset, return `FALSE`
+#'
+#' ### Current possible values and defaults
+#' - verbose: FALSE
+#' @return see details
+#' @export
+#'
+#' @examples
+#' VCFComparisonOption("verbose") # get current value
+#' VCFComparisonOption("verbose", TRUE) # set it to a new value
+#' VCFComparisonOption("verbose") # check the value again
+VCFComparisonOption <- function(option, value = NULL) {
+    stopifnot(is.character(option) && length(option) == 1)
+    option <- glue("VCFComparison.{option}")
+    if(is.null(value)) return(getOption(option, FALSE))
+    do.call(options, stats::setNames(list(value), option))
+}
+
+############### not exported internal utility functions
+
+#' Find out the parent calling function name
+#'
+#' @param parent_level int, how many parent call stack levels to traces back,
+#' number must bigger than 1, because 0 is `getParentFrame` itself.
+#' @param char bool, convert the return to character? `FALSE` will be original `call`
+#' object
+#' @details This function must be used in another function
+#' @examples
+#' abc <- function(){
+#'     getParentFrame(1)
+#' }
+#'
+#' def <- function(){
+#'     abc()
+#' }
+#' abc()
+#' def()
+#' getParentFrame()
+getParentFrame <- function(parent_level = 1, char = TRUE) {
+    if(parent_level < 1L) stop("parent_level must bigger than 1")
+    call_stack <- sys.calls()
+    if(length(call_stack) == 1) stop("This function must be called within another function, are you in global level?")
+    parent_level <- if(length(call_stack) <= parent_level) length(call_stack) - 1 else parent_level
+    call_name <- sys.calls()[[sys.nframe()- parent_level]][1]
+    if(char) as.character(call_name) else call_name
+}
+
+
+

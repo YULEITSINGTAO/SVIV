@@ -1,0 +1,28 @@
+Package: VCFComparison
+Type: Package
+Title: VCF Comparison
+Version: 0.1.0
+Authors@R: c(
+    person(given = "Lei", family = "Yu", role = c("aut", "cre"), email = "lyu062@ucr.edu"),
+    person(given = "Le", family = "Zhang", role = c("aut"), email = "le.zhang001@email.ucr.edu"),
+    person(given = "Zhenyu", family = "Jia", role = c("aut"), email = "zhenyuj@ucr.edu"))
+Description: Dealing with VCF files from different callers in order to get more accurate structure variations and visualize the results.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 4.0.0)
+Imports: 
+    circlize,
+    vcfR,
+    ggplot2,
+    dplyr,
+    magrittr,
+    spsUtil,
+    readr,
+    stats
+RoxygenNote: 7.1.2
+BugReports: https://github.com/YULEITSINGTAO/VCFComparison/issues
+URL: https://github.com/YULEITSINGTAO/VCFComparison
+Roxygen: list(markdown = TRUE)
+Config/testthat/edition: 3
