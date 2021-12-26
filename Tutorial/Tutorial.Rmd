@@ -75,6 +75,8 @@ There are three fields in a vcf file including meta, info and geno:
 
 > **_NOTE:_** The detailed description about vcf files please check the wikipedia link: [Variant Call Format](https://en.wikipedia.org/wiki/Variant_Call_Format)
 
+![**Table 1** An example of VCF file](./VCF_example.png)
+
 In the research, users might not need to use the whole information from a vcf file. Therefore, one can use the 
 
 ### 1.4 Filter the vcf files
@@ -109,7 +111,13 @@ Here we use the deletion as an example to sure how the merge works.
 
 #### 1.5.2 Merging translocation
 
-We can use two positions on different chromosome 
+We can use two positions on different chromosome $(chromosome\ i, Position\ m)$ and $(chromosome\ j, Position\ n)$. 
+
+##### 1.5.2.1 Windows based method
+
+
+##### 1.5.2.2 Clustering based method
+
 
 ```{r eval = FALSE}
 

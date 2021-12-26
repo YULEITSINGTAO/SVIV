@@ -1,6 +1,14 @@
 ## This is a function to order the translocation
 ## We keep the smaller index chr -> larger indes chr
 
+#' Sort Translocation Bed data
+#'
+#' @param input_trans_bed
+#'
+#' @return
+#' @export
+#'
+#' @examples
 sort_trans_bed <- function(input_trans_bed){
   input_trans_bed <- input_trans_bed %>% filter(Chr1!=Chr2)
   chrOrder <- c(paste("chr",1:22,sep=""),"chrX","chrY")
