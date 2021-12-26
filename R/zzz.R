@@ -3,4 +3,6 @@
 .onLoad <- function(libname, pkgname) {
     #default options
     VCFComparisonOption("verbose", FALSE)
+    setColorContinuous(muted = TRUE)
+    setColorDiscrete(muted = TRUE)
 }

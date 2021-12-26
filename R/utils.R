@@ -75,6 +75,66 @@ VCFComparisonOption <- function(option, value = NULL) {
     do.call(options, stats::setNames(list(value), option))
 }
 
+
+
+#' VCFComparison package plot colors
+#' @description get VCFComparison package plots colors, or set custom colors for
+#' both continuous and discrete colors.
+#' @details [setColorContinuous] will set color palettes for continuous plot gradients,
+#' [setColorDiscrete] set the colors to use for discrete color palettes.
+#' @param plot_colors character vector, colors to use for gradients for discrete palettes.
+#' Default value is `"default"`, for [setColorDiscrete] it uses *Set3*, for
+#' [setColorContinuous] it uses *plasma* gradient
+#' @param n integer, for [setColorDiscrete] only, how many unique colors to create based on
+#' provided colors. See [grDevices::colorRampPalette] for details.
+#' @return nothing will be returned, by the plot color options will be set, use
+#' `VCFComparisonOption("color_cont")` and `VCFComparisonOption("color_dis")`
+#' to check current values after using setting the colors.
+#' @param muted bool, muted the print message on console?
+#' @export
+#'
+#' @examples
+#' setColorContinuous(c("red", "blue", "yellow"))
+#' setColorDiscrete(c("red", "blue", "yellow"), 10)
+setColorContinuous <- function(plot_colors = "default", muted = FALSE) {
+    stopifnot(is.character(plot_colors))
+    stopifnot(is.logical(muted) && length(muted) == 1)
+    plasma <- c("#F0F921FF", "#CC4678FF", "#0D0887FF")
+    plot_colors <- if(all(plot_colors %in% "default")) plasma else plot_colors
+    lapply(plot_colors, function(x) {
+        if(stringr::str_starts(plot_colors, "#", negate = TRUE) && (!x %in% colors()))
+            logErr("Custom colors must be hex value or one of color names in `colors()`")
+    })
+    if(!muted) {
+        unlist(lapply(grDevices::colorRampPalette(plot_colors)(getOption("width", 80)), function(x) crayon::make_style(x)("|"))) %>%
+            cat(tblue("Continuous colors:\n"),., "\n", sep = "")
+    }
+    VCFComparisonOption("color_cont", plot_colors)
+    invisible(plot_colors)
+}
+
+#' @rdname setColorContinuous
+setColorDiscrete <- function(plot_colors = "default", n = 13, muted = FALSE) {
+    stopifnot(is.character(plot_colors))
+    stopifnot(is.numeric(n) && length(n) == 1 && n > 0)
+    stopifnot(is.logical(muted) && length(muted) == 1)
+    n <- as.integer(n)
+    set3 <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3",
+              "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9", "#BC80BD",
+              "#CCEBC5", "#FFED6F")
+    plot_colors <- if(all(plot_colors %in% "default")) set3 else plot_colors
+    lapply(plot_colors, function(x) {
+        if(stringr::str_starts(plot_colors, "#", negate = TRUE) && (!x %in% colors()))
+            logErr("Custom colors must be hex value or one of color names in `colors()`", parentFrame = 3)
+    })
+    plot_colors <- grDevices::colorRampPalette(plot_colors)(n)
+    if(!muted) {
+        unlist(lapply(plot_colors, function(x) crayon::make_style(x)(x))) %>%
+            cat(tblue("Discrete colors:\n"),., "\n")
+    }
+    VCFComparisonOption("color_dis", plot_colors)
+    invisible(plot_colors)
+}
 ############### not exported internal utility functions
 
 #' Find out the parent calling function name

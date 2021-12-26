@@ -1,10 +1,12 @@
 
 #' validate input SV dataframe
 #' @param special df
-#' @return checked df
+#' @param show_BND bool, check BND?
+#' @return checked results in a list
 #' @noRd
-.validateSVdf <- function(sv) {
+.validateSVdf <- function(sv, show_BND) {
     logInfo("Validating input SV")
+    has_group <- has_bnd_end <- TRUE
     if(!inherits(sv, "data.frame")) logErr("Input SVs must be a data.frame")
     sv_names <- names(sv)
     if(!all( c("Chrom", "Start", "End", "Type", "Sample") %in% sv_names))
@@ -14,10 +16,32 @@
     if(!inherits(sv$Start, "numeric")) logErr('Column "Start" must be `numeric`')
     if(!inherits(sv$End, "numeric")) logErr('Column "End" must be `numeric`')
     if(!inherits(sv$Type, c("factor", "character"))) logErr('Column "Type" must be `factor` or `character`')
-    if(! "Group" %in% sv_names) logWarn("column 'Group' is recommend but is missing")
-    else if(!inherits(sv$Group, c("factor", "character"))) logErr('Column "group" must be `factor` or `character`')
+    if(!all(sv$Type %in% c("BND", "DEL", "DUP", "INS", "INV"))) logErr('Column "Type" values must be one of "BND", "DEL", "DUP", "INS", "INV"')
+    if(! "Group" %in% sv_names) {
+        logWarn("column 'Group' is recommend but is missing")
+        has_group <- FALSE
+    } else if(!inherits(sv$Group, c("factor", "character"))) logErr('Column "group" must be `factor` or `character`')
+
+    if(show_BND) {
+        if(! "Bnd_end" %in% sv_names) {
+            logWarn("column 'Bnd_end' is info is required to mark translocations but missing, skip BND arc will not be shown")
+            has_bnd_end <- FALSE
+        } else {
+            if(!inherits(sv$Bnd_end, c("character"))) logErr('Column "Bnd_end" must be `character`')
+            bnd_values <- filter(sv, Type == "BND") %>% pull(Bnd_end)
+            if(any(is.na(bnd_values))) logErr("Row value of 'Bnd_end' couln of BND entries cannot be `NA`")
+            if(!all(stringr::str_detect(bnd_values, "\\w+[0+9]{0,2}:[0-9]+"))) logErr(
+                'Values  in "Bnd_end" column of BND entries must be in format of "chromsome:poisition_number", e.g. "chr3:10000"'
+            )
+        }
+    } else {has_bnd_end <- FALSE}
+
+
     logInfo("Validating input SV success")
-    sv
+    list(
+        group = has_group,
+        bnd_end = has_bnd_end
+    )
 }
 
 #' validate input reference gnome coordinates
@@ -66,6 +90,7 @@
 
 #' @param sv validated sv table
 #' @param ref validated referebce genome table
+#' @noRd
 .calcSVabsCoord <- function(sv, ref) {
     logInfo("Calculating SV absolute positions ...")
     tibble::add_column(sv, Abs_start = NA, Abs_end = NA, .after = "End") %>%
@@ -75,13 +100,32 @@
         )
 }
 
+
+#' @noRd
+#' @param sv sv table
+#'
+#' @return BND only table with end location processed, 3 new columns
+#'
+#' 1. Bnd_end_1, string, chrom number of end position
+#' 2. Bnd_end_2, numeric, chrom position number of end position
+#' 3. Bnd_end_abs, numeric, absolute position of end position
+.findBND <- function(sv, ref){
+    sv %>%
+        mutate(Bnd_end = stringr::str_split(Bnd_end, ":")) %>%
+        tidyr::unnest_wider(col = c("Bnd_end"), names_sep = "_") %>%
+        mutate(
+            Bnd_end_2 = as.numeric(Bnd_end_2),
+            Bnd_end_abs = ref$Abs_start[match(Bnd_end_1, ref$Chrom)] + Bnd_end_2
+        )
+}
+
 #' Plot the overview of SVs
 #' @description Plot SVs across all chromosomes on a big segment plot
 #' @param sv_table dataframe, a table with all SVs in a `bed`-like format.
 #' Columns required:
 #' - chr: string, chromosome numbers
 #' - Start: numeric integers, SV starting position
-#' - End: numeric integers, SV ending position
+#' - End: numeric integers, SV ending p1osition
 #' - Type: string, type of the SV, like `"INS"`, `"DEL"`, `"INV"`, etc.
 #' - Sample: string, sample IDs
 #' - Group: string, sample group IDs
@@ -97,16 +141,25 @@ svOverviewPlot <- function(
     sv,
     ref = hg38coord(TRUE),
     spe = hg38special(TRUE),
-    alpha = 1
-
+    show_BND = TRUE,
+    title = "SV overview plot",
+    title_hjust = 0.4,
+    xlab = "Chromosome",
+    ylab = "Sample",
+    alpha = 1,
+    sample_block = TRUE,
+    group_block = TRUE,
+    xend_expand = 1.005
 ){
     logInfo("Inputs validating...")
-    .validateSVdf(sv)
+    sv_vd_res <- .validateSVdf(sv, show_BND)
     ref <- .validateRefCoord(ref)
     .validateSpecialRegion(spe)
     sv <- .calcSVabsCoord(sv, ref)
+    sv_bnd <- filter(sv, Type == "BND")
+    sv <- filter(sv, Type != "BND")
 
-    logInfo("start to plot...")
+    logInfo("Start to create plot base...") # BND not plotted at this point
     p <- ggplot() +
         geom_segment(data = sv, aes(
             x = Sample, xend = Sample,
@@ -118,8 +171,9 @@ svOverviewPlot <- function(
         # arrow = arrow(angle = 90, length = unit(0.001, "cm"), type = "open")
         ) +
         geom_abline(intercept = ref$Abs_end, slope =0, size = 0.1, alpha = 0.7) +
-        ylab("Chromosome") +
-        xlab("Samples") +
+        ylab(ylab) +
+        xlab(xlab) +
+        ggtitle(title) +
         coord_flip() +
         theme_minimal() +
         theme(
@@ -128,21 +182,47 @@ svOverviewPlot <- function(
             axis.text.y = element_text(),
             axis.ticks.y = element_blank(),
             panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank()
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(hjust = title_hjust)
         ) +
-        scale_y_continuous(breaks = (ref$Abs_start + ref$Abs_end)/2, labels = ref$Chrom, expand = c(0,0))
+        scale_y_continuous(
+            breaks = (ref$Abs_start + ref$Abs_end)/2,
+            labels = ref$Chrom,
+            expand = c(0, 0),
+            limit = c(0, max(hg38$Abs_end) * xend_expand)
+        )
 
-    if("Group" %in% names(sv)) {
-        logInfo("Adding group info...")
+    # plot BND here
+    if(nrow(sv_bnd) > 0 && show_BND) {
+        logInfo("Adding BND points to plot...")
+        p <- p +
+            geom_point(data = sv_bnd, aes(x = Sample, y = Abs_start), shape = 4, size = 0.3)
+
+        # If end position of BND is provided, add arc
+        # TODO not ideal to add arc to plot, use this code in other places
+        if(sv_vd_res$bnd_end) {
+            logInfo("Adding BND arcs to plot...")
+            sv_bnd <- .findBND(sv_bnd, ref)
+            p <- p +
+                geom_point(data = sv_bnd, aes(x = Sample, y = Bnd_end_abs), shape = 4, size = 0.3) +
+                geom_curve(data = sv_bnd, aes(x = Sample, y = Abs_start, xend = Sample, yend = Bnd_end_abs), curvature = -0.03)
+        }
+    }
+
+    if(sv_vd_res$group && group_block) {
+        logInfo("Adding group info to plot...")
         sv_sample_group <- sv %>% dplyr::group_by(Sample, Group) %>% dplyr::count() %>%
             dplyr::arrange(Group)
         sample_order <- sv_sample_group$Sample
-        sv_sample_count <- sv_sample_group %>% ungroup() %>% count(Group) %>% dplyr::arrange(Group)
+        sv_sample_count <- sv_sample_group %>% dplyr::ungroup() %>% dplyr::count(Group) %>% dplyr::arrange(Group)
         vline_count <- cumsum(sv_sample_count$n)
         p <- p +
             scale_x_discrete(limits= sample_order) +
-            geom_vline(xintercept = vline_count + 0.5, size = 0.8)+
-            geom_vline(xintercept = seq_len(length(unique(sv$Sample))) + 0.5, size = 0.3, linetype = 2)
+            geom_vline(xintercept = vline_count[-length(vline_count)] + 0.5, size = 0.8)
+    }
+    if(sample_block) {
+        logInfo("Adding sample block info to plot...")
+        p <- p + geom_vline(xintercept = seq_len(length(unique(sv$Sample))) + 0.5, size = 0.3, linetype = 2)
     }
     p
 }

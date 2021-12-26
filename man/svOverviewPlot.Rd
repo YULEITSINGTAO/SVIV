@@ -4,7 +4,20 @@
 \alias{svOverviewPlot}
 \title{Plot the overview of SVs}
 \usage{
-svOverviewPlot(sv, ref = hg38coord(TRUE), spe = hg38special(TRUE), alpha = 1)
+svOverviewPlot(
+  sv,
+  ref = hg38coord(TRUE),
+  spe = hg38special(TRUE),
+  show_BND = TRUE,
+  title = "SV overview plot",
+  title_hjust = 0.4,
+  xlab = "Chromosome",
+  ylab = "Sample",
+  alpha = 1,
+  sample_block = TRUE,
+  group_block = TRUE,
+  xend_expand = 1.005
+)
 }
 \arguments{
 \item{sv_table}{dataframe, a table with all SVs in a \code{bed}-like format.
@@ -12,7 +25,7 @@ Columns required:
 \itemize{
 \item chr: string, chromosome numbers
 \item Start: numeric integers, SV starting position
-\item End: numeric integers, SV ending position
+\item End: numeric integers, SV ending p1osition
 \item Type: string, type of the SV, like \code{"INS"}, \code{"DEL"}, \code{"INV"}, etc.
 \item Sample: string, sample IDs
 \item Group: string, sample group IDs
