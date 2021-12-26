@@ -23,11 +23,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Structure variants (SVs) are large genomic alterations which typically larger than 50 bp. Nowdays, multiple SV callers can detect the structure variation such as DELLY, Manta, GRIDSS, LUMPY etc @rausch2012delly, @chen2016manta, @cameron2017gridss, @layer2014lumpy. 
 
-A common challenge of SV detection is the large false positive rate. Even each caller can provide the filter parameter to help users to filter the SV calls, we have concerns about the accuracy of the result from only one caller. Therefore, we need to apply the SV calling through multiple callers about combine the result to detect the most consistent calls among callers. 
+A common challenge of SV detection is the large false positive rate. Even each caller can provide the filter parameter to help users to filter the SV calls, we have concerns about the accuracy of the result from only one caller. Therefore, we need to apply the SV calling through multiple callers about combine the result to detect the most consistent calls among callers.
 
-VCFComparison is a R package to help users combine the result from different caller and unify the calls then perform visualization on the detected SVs. 
+### Type of structure variation
+In high-level, the structure variation can be divided into deletion, duplication, insertion, inversion and translocation. When we deal with the structure variation, translocation is the most different structure variation with the others. Deletion, duplication, insertion and inversion can be defined use a range on one chromosome but translocation is defined by two positions on different chromosomes. Therefore, in the VCFComparison, the methods applied on deletion, duplication, insertion and inversion are different with the methods applied on translocations. 
 
-## 1. Read the files.
+
+### Functions of VCFComparison
+VCFComparison is a R package to help users combine the result from different caller and unify the calls then perform visualization on the detected SVs. Figure 1 shows the workflow of VCFComparison. Users can use VCFComparison package to (1) filter and combine the results from different callers; (2) Collect and summarize the SV features and (3) explore the association between SVs with clinical outcomes.   
+
+![**Figure 1** Workflow of VCFComparison Package](./VCF_Comparison_Package_Workflow.png)
+
+## Section 1: Data Preparation
 ### 1.1 Sample map file
 
 Usually, in a structure variation detection project, researchers apply multiple callers in same cohorts. Therefore, users need to provide sample mapping data frame to indecate the sample ID and the directory of different callers on different sample. Here we use two callers and two patients as an example. 
@@ -50,72 +57,66 @@ sample_map <- data.frame(patient_ID = c("patient_1", "patient_2"),
 
 ### 1.2 Read the vcf files into R. 
 
-Based on the sample mapping file, we can read the vcf files into R use the function Read_VCFs. 
-
+Based on the sample mapping file, we can read the vcf files into R use the function `Read_VCFs`. 
 
 ```{r eval = FALSE}
 VCF_list <- Read_VCFs(sample_map)
-View(VCF_list)
 ```
 
 ### 1.3 Subtract the useful information from the VCF_list
 
 There are three fields in a vcf file including meta, info and geno: 
 
-**meta** the head lines in the vcf. meta-information is included after the ## string and must be key=value pairs.
-Example: 
+[1] **meta** the head lines in the vcf. meta-information is included after the ## string and must be key=value pairs.
 
-```{r eval = FALSE}
-##fileformat=VCFv4.2
-##fileDate=20090805
-##source=myImputationProgramV3.1
-##reference=file:///seq/references/1000GenomesPilot-NCBI36.fasta
-##contig=<ID=20,length=62435964,assembly=B36,md5=f126cdf8a6e0c7f379d618ff66beb2da,species="Homo sapiens",taxonomy=x>
-##phasing=partial
-##INFO=<ID=NS,Number=1,Type=Integer,Description="Number of Samples With Data">
-##INFO=<ID=DP,Number=1,Type=Integer,Description="Total Depth">
-##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
-##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
-##INFO=<ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129">
-##INFO=<ID=H2,Number=0,Type=Flag,Description="HapMap2 membership">
-##FILTER=<ID=q10,Description="Quality below 10">
-##FILTER=<ID=s50,Description="Less than 50% of samples have data">
-##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
-##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
-```
+[2] **fix** is a table consisted by 6 columns: CHROM POS ID REF ALT QUAL FILTER INFO
 
-**fix** is a table consisted by 6 columns: CHROM POS ID REF ALT QUAL FILTER INFO
-Example: 
-```{r eval = FALSE}
-xxxxx
-```
+[3] **gt** notes the genotype information for of each samples appears in the vcf. 
 
-**gt** notes the genotype information for of each samples appears in the vcf. 
-Example
-
-```{r eval = F}
- xxxx
-```
+> **_NOTE:_** The detailed description about vcf files please check the wikipedia link: [Variant Call Format](https://en.wikipedia.org/wiki/Variant_Call_Format)
 
 In the research, users might not need to use the whole information from a vcf file. Therefore, one can use the 
 
-## 1.3 Filter the vcf files
-The hard filter step is based on the parameter ("PASS" and "Precise") on each callers. Users can set the "PASS", "Precise" or "Both" to filter the SVs. 
+### 1.4 Filter the vcf files
+The hard filter step is based on the parameter ("PASS" and "Precise") on each callers. Users can set the "PASS", "Precise" or "Both" to filter the SVs. In this example, we use Both criteria i.e. the calls should pass the read quality criteria and also have split reads support. The package provide the function `Hard_Filter` to perform the filter procedure. 
+
+```{r eval = FALSE}
+Filtered_VCF_List <- Hard_Filter(VCF_List, Filter_Standard = "Both")
+```
+
+### 1.5. Merging the callers results of samples
+#### 1.5.1 Merging deletion, duplication, insertion and inversion. 
+Once the data is filtered and we should merge the result from different callers into a unified SV dataframe. The most common used merging methods are union and intersection. Here we should give a mathematical definition of union and intersection of deletion, duplication, insertion and inversion. We can use a range interval to define any variation in deletion, duplication, insertion and inversion. $sv = [start, end]$. For one sample, one type of structure and one call, we can define a SV set as
+$$SV_{[caller_i, SV\ type,\ patient_j]} = \{sv_1, sv_2, ...,sv_n\},$$
+where $caller_i$ is one of the software researchers used when called the structure; $SV\ type \in \{deletion, duplication, insertion, inversion\}$; $patient_j$ is the $j^{th}$ patient in the cohort. 
+
+> **_NOTE:_** there is no overlapping region in any two of $sv_1, sv_2, ..., sv_n$. 
+
+**Union and intersection** operations on sv regions.
+
+**Union and intersection** operation on SV sets. 
+
+Once we define the SV set, then we can define the **union** and **intersection** operation of two sets. 
+
+![**Figure 2** Definition of union and intersection.](./Union_and_Intersection.png)
+In VCFComparison, for deletion, duplication, insertion and inversion, the callers combining procedure is performed based on the union and intersection operation on the SV sets. Different from the ordinary union and intersection on whole callers, VCFComparison give the freedom to users that can select the dominant callers which provide the main result to keep the high accuracy. 
+
+Here we use the deletion as an example to sure how the merge works. 
+```{r eval=FALSE}
+
+
+```
+
+#### 1.5.2 Merging translocation
+
+We can use two positions on different chromosome 
 
 ```{r eval = FALSE}
 
 
 ```
 
-## 2. Merging the callers results of samples
-Once we performed the  
-
-```{r eval = FALSE}
-
-
-```
+## Section 2: Data Preparation
 
 ## References
 
