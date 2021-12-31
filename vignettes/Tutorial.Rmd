@@ -10,6 +10,10 @@ output:
   html_document:
     toc: true
     toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Introduction to the VCFComparison package}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
     
     
 ---
@@ -17,6 +21,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## 
+
 
 ## Introduction
 ### Structure variation
@@ -33,6 +39,7 @@ In high-level, the structure variation can be divided into deletion, duplication
 VCFComparison is a R package to help users combine the result from different caller and unify the calls then perform visualization on the detected SVs. Figure 1 shows the workflow of VCFComparison. Users can use VCFComparison package to (1) filter and combine the results from different callers; (2) Collect and summarize the SV features and (3) explore the association between SVs with clinical outcomes.   
 
 ![**Figure 1** Workflow of VCFComparison Package](./VCF_Comparison_Package_Workflow.png)
+
 
 ## Section 1: Data Preparation
 ### 1.1 Sample map file
@@ -110,8 +117,25 @@ Here we use the deletion as an example to sure how the merge works.
 ```
 
 #### 1.5.2 Merging translocation
+##### 1.5.2.1 Ways to define trabslocations
+A translocation corresponding to two break ends on different chromosomes. We can use $(chromosome\ i, Position\ m)$ and $(chromosome\ j, Position\ n)$ to represent two break ends. Therefore, in a translocation table, one transocation should at least have 4 four columns which records the position of two break ends. For example
 
-We can use two positions on different chromosome $(chromosome\ i, Position\ m)$ and $(chromosome\ j, Position\ n)$. 
+```{r}
+Simulated_translocation_bed <- readRDS("../inst/extdata/simulated_translocation.rds")
+Simulated_translocation_bed
+
+```
+
+We can use a ciricos plot to represent four translocations:
+
+
+![**Figure 3** Definition of union and intersection.](./Figures/Section_1_5_circos_example.png)
+
+Additionally, we we use a other way to define the translocation.For a given translocation, $(chromosome\ i, Position\ m); (chromosome\ j, Position\ n)$, we can construct a x-y axis which x axis represents the positions on $chromosome\ i$ and y axis represents the position on $chromsome\ j$. Then every translocation can be represented as a scatter on the x-y coordinate.  
+
+![**Figure 4** Definition of union and intersection.](./Figures/Section_1_5_circos_Translocation_Projection.png)
+Each translocation on in the .vcf file can be project to the x-y coordiante.
+![**Figure 4** Definition of union and intersection.](./Figures/Section_1_5_Genome_Translocation_Projection.png)
 
 ##### 1.5.2.1 Windows based method
 
@@ -124,7 +148,9 @@ We can use two positions on different chromosome $(chromosome\ i, Position\ m)$ 
 
 ```
 
-## Section 2: Data Preparation
+## Section 2: Feature Extraction
+
+## Section 3: Statistics Models
 
 ## References
 

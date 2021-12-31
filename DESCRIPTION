@@ -26,3 +26,5 @@ BugReports: https://github.com/YULEITSINGTAO/VCFComparison/issues
 URL: https://github.com/YULEITSINGTAO/VCFComparison
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
+VignetteBuilder: knitr
+Suggests: BiocStyle, knitr, rmarkdown
