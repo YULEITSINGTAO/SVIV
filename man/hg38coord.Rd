@@ -5,12 +5,9 @@
 \alias{hg38special}
 \title{Extra Homo sapiens hg38 genome coordinates}
 \usage{
-hg38coord(muted = FALSE)
+hg38coord()
 
-hg38special(muted = FALSE)
-}
-\arguments{
-\item{muted}{bool, print additional explanation of columns?}
+hg38special()
 }
 \value{
 a tibble coordinates in bed-like format

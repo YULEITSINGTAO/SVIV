@@ -4,53 +4,57 @@
 #' @description
 #' - [hg38coord] returns a tibble of all hg38 chromosome coordinates
 #' - [hg38special] returns a tibble of all hg38 special region coordinates
-#' @param muted bool, print additional explanation of columns?
-#'
 #' @return a tibble coordinates in bed-like format
 #' @export
 #'
 #' @examples
 #' hg38coord()
-hg38coord <- function(muted = FALSE){
-    stopifnot(is.logical(muted) && length(muted) == 1)
+hg38coord <- function(){
     hg38 <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38.bed"),
                             col_names = FALSE, show_col_types = FALSE, progress = FALSE)
     names(hg38) <- c("Chrom", "Start", "End", "Abs_start", "Abs_end")
-    if(!muted) {
-        cat(
-            "Returning human hg38 genome coordinates\n",
-            tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
-            tblue("Start:"), "Chromosome start position\n",
-            tblue("End:"), "Chromosome end position\n",
-            tblue("Abs_start:"), "Chromosome absolute cumulative start position\n",
-            tblue("Abs_end:"), "Chromosome absolute cumulative end position\n"
-        )
-    }
-    hg38
+    structure(hg38, class = c("VCFComparison_hg38coord", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 }
+
+
+#' @exportS3Method
+print.VCFComparison_hg38coord <- function(x) {
+    cat(
+        "Returning human hg38 genome coordinates\n",
+        tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
+        tblue("Start:"), "Chromosome start position\n",
+        tblue("End:"), "Chromosome end position\n",
+        tblue("Abs_start:"), "Chromosome absolute cumulative start position\n",
+        tblue("Abs_end:"), "Chromosome absolute cumulative end position\n"
+    )
+    print(tibble::as_tibble(x))
+    x
+}
+
 
 #' @rdname hg38coord
 #' @export
 #' @examples
 #' hg38specail()
-hg38special <- function(muted = FALSE){
-    stopifnot(is.logical(muted) && length(muted) == 1)
+hg38special <- function(){
     hg38_special <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38_specail_regions.bed"),
                                     col_names = FALSE, show_col_types = FALSE, progress = FALSE)
     names(hg38_special) <- c("Chrom", "Start", "End", "Region")
-    if(!muted) {
-        cat(
-            "Returning human hg38 genome coordinates\n",
-            tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
-            tblue("Start:"), "Chromosome start position\n",
-            tblue("End:"), "Chromosome end position\n",
-            tblue("Region:"), "Chromosome special region type, like centromere, telomere, Low Mappability, etc.\n"
-        )
-    }
-    hg38_special
+    structure(hg38_special, class = c("VCFComparison_hg38special", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 }
 
-
+#' @exportS3Method
+print.VCFComparison_hg38special <- function(x) {
+    cat(
+        "Returning human hg38 genome coordinates\n",
+        tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
+        tblue("Start:"), "Chromosome start position\n",
+        tblue("End:"), "Chromosome end position\n",
+        tblue("Region:"), "Chromosome special region type, like centromere, telomere, Low Mappability, etc.\n"
+    )
+    print(tibble::as_tibble(x))
+    x
+}
 
 #' Get or set options for VCFComparison package
 #' @param option string, what option to get or set
