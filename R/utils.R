@@ -189,3 +189,14 @@ getParentFrame <- function(parent_level = 1, char = TRUE) {
 
 
 
+
+#' Check pkg installation
+#'
+#' @param pkgs string vector of package names
+#' @noRd
+#' @return If no missing , returns `TRUE`, else error message
+checkPkg <- function(pkgs) {
+    if(any(notFalsy(spsUtil::checkNameSpace(pkgs, from = "CRAN, Bioconductor or Github"))))
+       logErr("Some required package(s) are missing, install them before using this function")
+    TRUE
+}

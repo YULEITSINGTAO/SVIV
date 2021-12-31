@@ -16,5 +16,6 @@ svChrPlot <- function(
     ref = "hg38",
     label_karyo =TRUE
 ){
+ if(notFalsy(spsUtil::checkNameSpace("ggplot2"))) logErr("Install xxx")
 
 }
