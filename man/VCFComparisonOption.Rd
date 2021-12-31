@@ -4,7 +4,7 @@
 \alias{VCFComparisonOption}
 \title{Get or set options for VCFComparison package}
 \usage{
-VCFComparisonOption(option, value = NULL)
+VCFComparisonOption(option = NULL, value = NULL)
 }
 \arguments{
 \item{option}{string, what option to get or set}

@@ -68,7 +68,16 @@ hg38special <- function(muted = FALSE){
 #' VCFComparisonOption("verbose") # get current value
 #' VCFComparisonOption("verbose", TRUE) # set it to a new value
 #' VCFComparisonOption("verbose") # check the value again
-VCFComparisonOption <- function(option, value = NULL) {
+VCFComparisonOption <- function(option = NULL, value = NULL) {
+    if(is.null(option)) {
+        cat(
+            tyellow("Possible VCFComparison package options are:\n"),
+            tblue("verbose:    bool, verbosity level, default `FALSE`\n"),
+            tblue("color_cont: string, continuous color gradient for plots, use `setColorContinuous` to set\n"),
+            tblue("color_dis : string, discrete color palette for plots, use `setColorDiscrete` to set\n")
+        )
+        return(invisible())
+    }
     stopifnot(is.character(option) && length(option) == 1)
     option <- glue("VCFComparison.{option}")
     if(is.null(value)) return(getOption(option, FALSE))
@@ -83,8 +92,13 @@ VCFComparisonOption <- function(option, value = NULL) {
 #' @details [setColorContinuous] will set color palettes for continuous plot gradients,
 #' [setColorDiscrete] set the colors to use for discrete color palettes.
 #' @param plot_colors character vector, colors to use for gradients for discrete palettes.
-#' Default value is `"default"`, for [setColorDiscrete] it uses *Set3*, for
-#' [setColorContinuous] it uses *plasma* gradient
+#'
+#' If the `plot_colors` is keyword "current", only display current color options but **DO NOT**
+#' set new color options.
+#'
+#' If the value is `"default"`, for [setColorDiscrete] it uses *Set3*, for
+#' [setColorContinuous] it uses *plasma* gradient.
+#'
 #' @param n integer, for [setColorDiscrete] only, how many unique colors to create based on
 #' provided colors. See [grDevices::colorRampPalette] for details.
 #' @return nothing will be returned, by the plot color options will be set, use
@@ -96,11 +110,13 @@ VCFComparisonOption <- function(option, value = NULL) {
 #' @examples
 #' setColorContinuous(c("red", "blue", "yellow"))
 #' setColorDiscrete(c("red", "blue", "yellow"), 10)
-setColorContinuous <- function(plot_colors = "default", muted = FALSE) {
+setColorContinuous <- function(plot_colors = "current", muted = FALSE) {
     stopifnot(is.character(plot_colors))
     stopifnot(is.logical(muted) && length(muted) == 1)
     plasma <- c("#F0F921FF", "#CC4678FF", "#0D0887FF")
-    plot_colors <- if(all(plot_colors %in% "default")) plasma else plot_colors
+    plot_colors <- if(all(plot_colors %in% "default")) plasma
+                   else if (all(plot_colors %in% "current"))  VCFComparisonOption("color_cont")
+                   else                                plot_colors
     lapply(plot_colors, function(x) {
         if(stringr::str_starts(plot_colors, "#", negate = TRUE) && (!x %in% colors()))
             logErr("Custom colors must be hex value or one of color names in `colors()`")
@@ -114,15 +130,18 @@ setColorContinuous <- function(plot_colors = "default", muted = FALSE) {
 }
 
 #' @rdname setColorContinuous
-setColorDiscrete <- function(plot_colors = "default", n = 13, muted = FALSE) {
+setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
     stopifnot(is.character(plot_colors))
     stopifnot(is.numeric(n) && length(n) == 1 && n > 0)
     stopifnot(is.logical(muted) && length(muted) == 1)
     n <- as.integer(n)
-    set3 <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3",
-              "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9", "#BC80BD",
-              "#CCEBC5", "#FFED6F")
-    plot_colors <- if(all(plot_colors %in% "default")) set3 else plot_colors
+    # set3 <- c("#8DD3C7", "#FFFFB3", "#BEBADA", "#FB8072", "#80B1D3",
+    #           "#FDB462", "#B3DE69", "#FCCDE5", "#D9D9D9", "#BC80BD",
+    #           "#CCEBC5", "#FFED6F")
+    set2 <- c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3")
+    plot_colors <- if(all(plot_colors %in% "default")) set2
+                   else if (all(plot_colors %in% "current"))  VCFComparisonOption("color_dis")
+                   else                                plot_colors
     lapply(plot_colors, function(x) {
         if(stringr::str_starts(plot_colors, "#", negate = TRUE) && (!x %in% colors()))
             logErr("Custom colors must be hex value or one of color names in `colors()`", parentFrame = 3)
