@@ -7,8 +7,7 @@
 svOverviewPlot(
   sv,
   ref = hg38coord(TRUE),
-  spe = hg38special(TRUE),
-  show_BND = TRUE,
+  show_BND = FALSE,
   title = "SV overview plot",
   title_hjust = 0.4,
   xlab = "Chromosome",
@@ -16,28 +15,64 @@ svOverviewPlot(
   alpha = 1,
   sample_block = TRUE,
   group_block = TRUE,
-  xend_expand = 1.005
+  xend_expand = 1.005,
+  color_palette = VCFComparisonOption("color_dis")
 )
 }
 \arguments{
-\item{sv_table}{dataframe, a table with all SVs in a \code{bed}-like format.
-Columns required:
+\item{sv}{dataframe, a table with all SVs in a \code{bed}-like format.
+Columns:
 \itemize{
-\item chr: string, chromosome numbers
-\item Start: numeric integers, SV starting position
-\item End: numeric integers, SV ending p1osition
-\item Type: string, type of the SV, like \code{"INS"}, \code{"DEL"}, \code{"INV"}, etc.
+\item Chrom:  string, chromosome numbers
+\item Start:  numeric integers, SV starting position
+\item End:    numeric integers, SV ending p1osition
+\item Type:   string, type of the SV, must be "BND", "DEL", "DUP", "INS", "INV"
 \item Sample: string, sample IDs
-\item Group: string, sample group IDs
+\item Group:  string, optional, sample group IDs
 }}
 
-\item{gnome_interval}{path, string, where did the intervaldefault value `"default"}
+\item{ref}{dataframe, reference gnome
+Columns:
+\itemize{
+\item Chrom:     string, Chromosome numbers,like  chr1-chr22, chrX, chrY
+\item Start:     numeric, Chromosome start position
+\item End:       numeric, Chromosome end position
+\item Abs_start: numeric, optional, Chromosome absolute cumulative start position
+\item Abs_end:   numeric, optional, Chromosome absolute cumulative end position
+}
 
-\item{gnome_blacklist}{}
+Use \code{\link[=hg38coord]{hg38coord()}} to get an example of hg38 reference}
+
+\item{show_BND}{bool, plot translocation break points on the plot? Default is
+\code{FALSE}. Showing a lot of BND can make the plot massy. BND break points are
+marked with \code{X} symbols.}
+
+\item{title}{string, plot title}
+
+\item{title_hjust}{numeric, plot horizontal adjustment, default is trying to
+move the title to the center of the plot}
+
+\item{xlab}{string, x axis label}
+
+\item{ylab}{string, y axis label}
+
+\item{alpha}{numeric, transparency of symbol and segments, between 0 and 1}
+
+\item{sample_block}{bool, use dashed lines to separate between each sample?}
+
+\item{group_block}{bool, if \code{Group} column presents in the \code{sv} table, use
+solid lines to separate between each sample group?}
+
+\item{xend_expand}{numeric, a fraction to expand the x-axis. Sometimes the last
+chromosome is cropped, try increase this value a little bit some the last chromosome
+can be displayed.}
+
+\item{color_palette}{string, color names or color hex codes of what colors you want
+to use to mark SV types. The default is to follow package discrete color options.}
 }
 \value{
-
+returns a ggplot object
 }
 \description{
-Plot SVs across all chromosomes on a big segment plot
+Plot SVs across all chromosomes and across all samples on a big segment plot
 }

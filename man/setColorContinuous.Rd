@@ -5,14 +5,18 @@
 \alias{setColorDiscrete}
 \title{VCFComparison package plot colors}
 \usage{
-setColorContinuous(plot_colors = "default", muted = FALSE)
+setColorContinuous(plot_colors = "current", muted = FALSE)
 
-setColorDiscrete(plot_colors = "default", n = 13, muted = FALSE)
+setColorDiscrete(plot_colors = "current", n = 8, muted = FALSE)
 }
 \arguments{
 \item{plot_colors}{character vector, colors to use for gradients for discrete palettes.
-Default value is \code{"default"}, for \link{setColorDiscrete} it uses \emph{Set3}, for
-\link{setColorContinuous} it uses \emph{plasma} gradient}
+
+If the \code{plot_colors} is keyword "current", only display current color options but \strong{DO NOT}
+set new color options.
+
+If the value is \code{"default"}, for \link{setColorDiscrete} it uses \emph{Set3}, for
+\link{setColorContinuous} it uses \emph{plasma} gradient.}
 
 \item{muted}{bool, muted the print message on console?}
 
