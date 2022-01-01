@@ -15,3 +15,7 @@ svChrPlot(sv, ref = "hg38", label_karyo = TRUE)
 \description{
 Plot SVs by chromosome
 }
+\details{
+You must install \code{karyoploteR} package to use this function. By default, this
+package is not installed.
+}

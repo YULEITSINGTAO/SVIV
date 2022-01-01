@@ -163,7 +163,7 @@
 #' @examples
 svOverviewPlot <- function(
     sv,
-    ref = hg38coord(TRUE),
+    ref = hg38coord(),
     show_BND = FALSE,
     title = "SV overview plot",
     title_hjust = 0.4,
