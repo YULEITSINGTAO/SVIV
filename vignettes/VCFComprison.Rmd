@@ -3,9 +3,10 @@ title: "Introduction to the VCFComparison package"
 author:
 - name: Lei Yu
   affiliation: University of California, Riverside
+  email: lyu062@ucr.edu,
 - name: Le Zhang
   affiliation: University of California, Riverside
-  email: lyu062@ucr.edu, lzhan140@ucr.edu 
+  email: lzhan140@ucr.edu 
 package: VCFComparison
 output:
   BiocStyle::html_document
@@ -18,6 +19,22 @@ vignette: |
 ---
 
 # Introduction
+## Install Package
+
+To install this package, start R (version "4.1") and enter:
+
+```{r eval = F}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("VCFComparison")
+
+```
+A package only needs to be installed once. Load the package into an R session with
+
+```{r eval = F}
+library(VCFComparison)
+```
 ## Structure variation
 
 Structure variants (SVs) are large genomic alterations which typically larger than 50 bp. Nowdays, multiple SV callers can detect the structure variation such as DELLY, Manta, GRIDSS, LUMPY etc @rausch2012delly, @chen2016manta, @cameron2017gridss, @layer2014lumpy. 
@@ -64,6 +81,55 @@ Based on the sample mapping file, we can read the vcf files into R use the funct
 VCF_list <- Read_VCFs(sample_map)
 ```
 
+```{r eval = FALSE}
+> VCF_list
+$DELLY
+$DELLY$patient_1
+***** Object of Class vcfR *****
+12 samples
+19 CHROMs
+49 variants
+Object size: 0.1 Mb
+0 percent missing data
+*****        *****         *****
+
+$DELLY$patient_2
+***** Object of Class vcfR *****
+12 samples
+19 CHROMs
+51 variants
+Object size: 0.1 Mb
+0 percent missing data
+*****        *****         *****
+
+
+$Manta
+$Manta$patient_1
+***** Object of Class vcfR *****
+2 samples
+34 CHROMs
+375 variants
+Object size: 0.2 Mb
+0 percent missing data
+*****        *****         *****
+
+$Manta$patient_2
+***** Object of Class vcfR *****
+2 samples
+40 CHROMs
+655 variants
+Object size: 0.3 Mb
+0 percent missing data
+*****        *****         *****
+
+```
+
+VCF List is the basic data type in this package. In a VCF List, it contents all of the partient SV results called by the provided callers. Figure \@ref(fig:VCFListStructure) shows the structure of the VCF list data type. 
+
+```{r VCFListStructure, fig.cap="Strucure of VCF List.", echo=FALSE}
+knitr::include_graphics('./Figures/VCF_Structure_List.png')
+```
+
 ## Subtract the useful information from the VCF_list
 
 There are three fields in a vcf file including meta, info and geno: 
@@ -74,7 +140,7 @@ There are three fields in a vcf file including meta, info and geno:
 
 [3] **gt** notes the genotype information for of each samples appears in the vcf. 
 
-> **_NOTE:_** The detailed description about vcf files please check the wikipedia link: [Variant Call Format](https://en.wikipedia.org/wiki/Variant_Call_Format)
+**_NOTE:_** The detailed description about vcf files please check the wikipedia link: [Variant Call Format](https://en.wikipedia.org/wiki/Variant_Call_Format)
 
 ```{r VCFExample, fig.cap="An example of VCF file", echo=FALSE}
 knitr::include_graphics('./Figures/VCF_example.png')
@@ -120,8 +186,8 @@ Here we use the deletion as an example to sure how the merge works.
 
 ```
 
-#### 1.5.2 Merging translocation
-##### 1.5.2.1 Ways to define trabslocations
+### Merging translocation
+#### Ways to define trabslocations
 A translocation corresponding to two break ends on different chromosomes. We can use $(chromosome\ i, Position\ m)$ and $(chromosome\ j, Position\ n)$ to represent two break ends. Therefore, in a translocation table, one transocation should at least have 4 four columns which records the position of two break ends. For example
 
 ```{r}
@@ -149,15 +215,48 @@ Each translocation on in the .vcf file can be project to the x-y coordiante.
 knitr::include_graphics('./Figures/Section_1_5_Genome_Translocation_Projection.png')
 ```
 
+For a translocation, it is a challenging work to merge the translocation from different callers because the translocation inclduding two break ends and that makes it be different from merging the range structure variants.
+
+Here we provide two ways to merge the translocation.
+
 #### Windows based method
+Firstly, we need to divide the whole genome into equal width bins using function `Genome_Windows()`.
+
+```{r eval = F}
+bins <- Genome_Windows("hg19", 5000000)
+
+```
+
+```{r eval = F}
+> bins
+     Chr     Start       End
+1   chr1         1   5000000
+2   chr1   5000001  10000000
+3   chr1  10000001  15000000
+4   chr1  15000001  20000000
+5   chr1  20000001  25000000
+
+```
+
+The *bins* notes the chromosome number, start position and end position of every bin (or window). Then, we can align the translocation table to the bin reference. Through function `Align_to_Bins`
 
 
 #### Clustering based method
 
 # Feature Extraction
+## Region based structures variations
+
+## Translocation 
 
 # Statistics Models
+VCFComparison merged the results from multiple callers and abstract structure features based on the SVs among whole cohorts. Then, based on the extracted features. Users can apply multiple models to select key features and genes. 
 
+## Classification Models
+
+## Regression Models
+### Parametric Models
+
+### Non-parametric Models
 # References
 
 <div id="refs"></div>
