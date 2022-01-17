@@ -19,15 +19,3 @@ Find out the parent calling function name
 \details{
 This function must be used in another function
 }
-\examples{
-abc <- function(){
-    getParentFrame(1)
-}
-
-def <- function(){
-    abc()
-}
-abc()
-def()
-getParentFrame()
-}

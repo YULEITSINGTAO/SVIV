@@ -4,13 +4,64 @@
 \alias{svChrPlot}
 \title{Plot SVs by chromosome}
 \usage{
-svChrPlot(sv, ref = "hg38", label_karyo = TRUE)
+svChrPlot(
+  sv,
+  ref = "hg38",
+  chr = "chr1",
+  filter_sample = NULL,
+  filter_group = NULL,
+  label_karyo = TRUE,
+  mark_bnd = FALSE,
+  show_legend = TRUE,
+  legend_x_mar = -0.1,
+  alpha = 0.5,
+  plot_colors = VCFComparisonOption("color_dis"),
+  title = "SV plot by chromosome"
+)
 }
 \arguments{
-\item{ref}{string, what genome to use, default is "hg38"}
+\item{sv}{dataframe, a table with all SVs in a \code{bed}-like format.
+Columns:
+\itemize{
+\item Chrom:  string, chromosome numbers
+\item Start:  numeric integers, SV starting position
+\item End:    numeric integers, SV ending p1osition
+\item Type:   string, type of the SV, must be "BND", "DEL", "DUP", "INS", "INV"
+\item Sample: string, sample IDs
+\item Group:  string, optional, sample group IDs
+}}
+
+\item{ref}{string, what genome to use, default is "hg38".}
+
+\item{chr}{string, which chromosome to plot.}
+
+\item{filter_sample}{character vector or \code{NULL}, what samples to plot instead of all samples.}
+
+\item{filter_group}{character vector or \code{NULL}, what sample groups to plot instead of all groups.
+This require you to have a \code{Group} column in \code{sv} table}
+
+\item{label_karyo}{bool, label regions on the chromsome?}
+
+\item{mark_bnd}{bool, mark translocation as "X" on the plot? Usually there will
+be a lot of BND events which may mass up the plot. Default is not to plot these
+BND.}
+
+\item{show_legend}{bool, show legend?}
+
+\item{legend_x_mar}{numeric, what percentage value should the legend move vertically?
+Default is to move downward below the karyotype. If you have many samples,
+the legend may plotted with overlap of karyotype. Then you may want to change
+this number.}
+
+\item{alpha}{numeric, what is SV event block transparency value, between 0-1}
+
+\item{plot_colors}{character vector, what plot colors to use. Default follows
+package \link{setColorDiscrete} setting. You need to provide at least 5 colors.}
+
+\item{title}{string, plot title}
 }
 \value{
-
+a \code{plotKaryotype} plot object, see \code{?plotKaryotype} for details
 }
 \description{
 Plot SVs by chromosome

@@ -46,7 +46,7 @@ hg38special <- function(){
 #' @exportS3Method
 print.VCFComparison_hg38special <- function(x) {
     cat(
-        "Returning human hg38 genome coordinates\n",
+        "Returning human hg38 genome special regions' coordinates\n",
         tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
         tblue("Start:"), "Chromosome start position\n",
         tblue("End:"), "Chromosome end position\n",
@@ -168,6 +168,7 @@ setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
 #' object
 #' @details This function must be used in another function
 #' @examples
+#' @noRd
 #' abc <- function(){
 #'     getParentFrame(1)
 #' }
