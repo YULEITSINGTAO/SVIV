@@ -238,7 +238,9 @@ bins <- Genome_Windows("hg19", 5000000)
 
 ```
 
-The *bins* notes the chromosome number, start position and end position of every bin (or window). Then, we can align the translocation table to the bin reference. Through function `Align_to_Bins`
+The *bins* notes the chromosome number, start position and end position of every bin (or window). Then, we can align the translocation table to the bin reference. Through function `Align_to_Bins`, we can relax the "point to point" translocation to the range to range translocation. Then we can count the frequence of trnaslcation happened between two range then detect the common translocations. 
+
+
 
 
 #### Clustering based method
