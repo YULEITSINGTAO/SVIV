@@ -6,8 +6,14 @@ For structure variation analysis based on whole genome sequencing (WGS), usually
 This package is still under development, hope we can finish it soon!
 
 ## Progress
-- [x] Import VCFs
-- [ ] Chop intervals
-- [ ] Define operators to combine the results from different callers
-- [ ] Circos plot of SVs histogram
+### Data Process
+- [x] 1. Import VCFs
+- [ ] 2. Chop intervals (need improve)
+- [ ] 3. Define operators to combine the results from different callers
+- [ ] 4. Collect SV features 
+- [ ] 5. Cluster translocation SVs
+### Visualization
+- [x] 1. x-y SV overview all chromosomes
+- [x] 2. x-y SV overview specific chromosomes
+- [ ] 3. Circos plot of SVs histogram
 
