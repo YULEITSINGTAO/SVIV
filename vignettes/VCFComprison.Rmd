@@ -146,6 +146,10 @@ There are three fields in a vcf file including meta, info and geno:
 knitr::include_graphics('./Figures/VCF_example.png')
 ```
 
+## Generate overlook statistics about the SVs among in specific patient or whole population
+
+
+
 ## Filter the vcf files
 The hard filter step is based on the parameter ("PASS" and "Precise") on each callers. Users can set the "PASS", "Precise" or "Both" to filter the SVs. In this example, we use Both criteria i.e. the calls should pass the read quality criteria and also have split reads support. The package provide the function `Hard_Filter` to perform the filter procedure. 
 

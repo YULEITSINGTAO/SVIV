@@ -1,3 +1,13 @@
+#' SV type extraction
+#' This function is used to extract specific SV types from the SV list
+#' @param VCF_list
+#' @param SV_type
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' SV_type_List(SVF_list, SV_type)
 SV_type_List <- function(VCF_list, SV_type){
 
   if (SV_type == "DEL"){
