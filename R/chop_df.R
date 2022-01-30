@@ -14,7 +14,7 @@ Chop_df <- function(bed_df){
     chromosomes <- paste0("chr", c(1:22,"X","Y"))
     chop_df_list <- list()
     for (chr in chromosomes) {
-        chr_bed_df <- bed_df %>% dplyr::select(Chr == chr)
+        chr_bed_df <- bed_df %>% dplyr::filter(Chr == chr)
         if (nrow(chr_bed_df)==0){
             choped_df_intervals <- data.frame(Chr = NA, Start = NA, End = NA)
             print(paste("There is no SVs in ", chr))
@@ -29,10 +29,11 @@ Chop_df <- function(bed_df){
                 for (j in 1:length(points_in_interval_i - 1)){
                     choped_df_intervals <- rbind(choped_df_intervals, c(points_in_interval_i[i], points_in_interval_i[i+1]))
                 }
-
+                choped_df_intervals <- cbind(chr, choped_df_intervals)
+                colnames(choped_df_intervals) <- c("Chr", "Start", "End")
             }
         }
-        chop_df_list[[chr]] = choped_interval
+        chop_df_list[[chr]] = choped_df_intervals
     }
     return(chop_df_list)
 }
