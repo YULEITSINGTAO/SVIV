@@ -8,7 +8,7 @@ This package is still under development, hope we can finish it soon!
 ## Progress
 ### Data Process
 - [x] 1. Import VCFs
-- [ ] 2. Chop intervals (need improve)
+- [ ] 2. Chop intervals (need to improve)
 - [ ] 3. Define operators to combine the results from different callers
 - [ ] 4. Collect SV features 
 - [ ] 5. Cluster translocation SVs
