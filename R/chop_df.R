@@ -26,8 +26,9 @@ Chop_df <- function(bed_df){
                 chr_bed_df_in_interval_i <- chr_bed_df %>% dplyr::filter(Start >= chr_bed_df_union[i,1], End <= chr_bed_df_union[i,2])
                 points_in_interval_i <- sort(unique(c(chr_bed_df_in_interval_i[,2], chr_bed_df_in_interval_i[,3])))
                 choped_df_intervals <-c()
-                for (j in 1:length(points_in_interval_i - 1)){
-                    choped_df_intervals <- rbind(choped_df_intervals, c(points_in_interval_i[i], points_in_interval_i[i+1]))
+
+                for (j in c(1:(length(points_in_interval_i) - 1))){
+                    choped_df_intervals <- rbind(choped_df_intervals, c(points_in_interval_i[j], points_in_interval_i[j+1]))
                 }
                 choped_df_intervals <- cbind(chr, choped_df_intervals)
                 colnames(choped_df_intervals) <- c("Chr", "Start", "End")
