@@ -22,7 +22,6 @@ Align_to_Bin <- function(bed_file, bin_reference){
                   (B[,3] >= bed_file[i,2])), 4] <- B[which((as.character(B[,1]) == bed_file[i,1]) & (B[,2] <= bed_file[i,3]) &
                                                                (B[,3] >= bed_file[i,2])), 4] + 1
        }
-    }
 
     return(B)
 
