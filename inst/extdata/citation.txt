@@ -1,0 +1,23 @@
+Translocation
+@article{burns2018whole,
+  title={Whole-genome sequencing of chronic lymphocytic leukaemia reveals distinct differences in the mutational landscape between IgHVmut and IgHVunmut subgroups},
+  author={Burns, A and Alsolami, R and Becq, J and Stamatopoulos, Basile and Timbs, Adele and Bruce, D and Robbe, P and Vavoulis, D and Clifford, R and Cabes, Maite and others},
+  journal={Leukemia},
+  volume={32},
+  number={2},
+  pages={332--342},
+  year={2018},
+  publisher={Nature Publishing Group}
+}
+
+SVs
+@article{xia2021multiplatform,
+  title={Multiplatform discovery and regulatory function analysis of structural variations in non-small cell lung carcinoma},
+  author={Xia, Lin and Wang, Zhoufeng and Wu, Xinyue and Zeng, Tianfu and Luo, Wenxin and Hu, Xinlei and Ni, Yinyun and Che, Guowei and Liu, Lunxu and Zhang, Wei and others},
+  journal={Cell Reports},
+  volume={36},
+  number={10},
+  pages={109660},
+  year={2021},
+  publisher={Elsevier}
+}
