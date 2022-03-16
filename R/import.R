@@ -13,7 +13,7 @@
 #' @importFrom  tidyr unnest_wider
 #' @importFrom  grDevices colorRampPalette
 #' @importFrom  crayon make_style
-#' @importFrom Biostrings tileGenome
+#' @importFrom GenomicRanges tileGenome
 NULL
 
 

@@ -2,7 +2,9 @@
 % Please edit documentation in R/Align_to_Bin.R
 \name{Align_to_Bin}
 \alias{Align_to_Bin}
-\title{Align_to_Bin}
+\title{Align_to_Bin
+This function can count the range SVs in given ranges. The given ranges can be bins.
+Bins can be equally divided, or the result form chopped dataframe.}
 \usage{
 Align_to_Bin(bed_file, bin_reference)
 }
@@ -14,7 +16,10 @@ Align_to_Bin(bed_file, bin_reference)
 }
 \description{
 Align_to_Bin
+This function can count the range SVs in given ranges. The given ranges can be bins.
+Bins can be equally divided, or the result form chopped dataframe.
 }
 \examples{
 Align_to_Bin(bed_file, bin_reference)
+
 }

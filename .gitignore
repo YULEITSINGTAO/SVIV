@@ -46,5 +46,5 @@ vignettes/*.pdf
 *rsconnect
 
 # top level csv tsv files
-*.csv
+#*.csv
 *.tsv

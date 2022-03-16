@@ -17,7 +17,8 @@ Chop_df <- function(bed_df){
         chr_bed_df <- bed_df %>% dplyr::filter(Chr == chr)
         if (nrow(chr_bed_df)==0){
             choped_df_intervals <- data.frame(Chr = NA, Start = NA, End = NA)
-            print(paste("There is no SVs in ", chr))
+            logWarn(paste("There is no SVs in ", chr))
+
         }else{
             chr_bed_df_intervals <- intervals::Intervals(chr_bed_df %>% dplyr::select(Start, End))
             chr_bed_df_union <- as.data.frame(intervals::interval_union(chr_bed_df_intervals))
