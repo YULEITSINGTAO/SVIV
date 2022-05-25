@@ -254,6 +254,15 @@ The *bins* notes the chromosome number, start position and end position of every
 
 ## Translocation 
 
+# Example dataset
+
+We used the R package [RSVSim](https://www.bioconductor.org/packages/release/bioc/html/RSVSim.html) to add the structure variations in the [hg19](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html) and get the rearranged genome, then, the short reads simulator [ART](https://www.niehs.nih.gov/research/resources/software/biostatistics/art/) was applied to generate the 100x depth short reads. At last, we applied the SV callers to get the results. The workflow of simulated example dataset is in Figure \@ref(fig:WorkflowofExampleDataset)
+
+```{r WorkflowofExampleDataset, fig.cap="Workflow of example dataset.", echo=FALSE}
+knitr::include_graphics('./Figures/workflow_of_example_data.png')
+```
+
+
 # Statistics Models
 VCFComparison merged the results from multiple callers and abstract structure features based on the SVs among whole cohorts. Then, based on the extracted features. Users can apply multiple models to select key features and genes. 
 
