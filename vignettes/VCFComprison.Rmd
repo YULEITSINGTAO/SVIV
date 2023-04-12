@@ -68,8 +68,8 @@ We define the sample mapping data frame as follow:
 
 ```{r eval= F}
 sample_map <- data.frame(patient_ID = c("patient_1", "patient_2"), 
-                         DELLY = c("/rhome/lyu062/shared/coh_SV/DELLY/output/tumor_vs_normal/filtered/post_filtered/M02.vcf", "/rhome/lyu062/shared/coh_SV/DELLY/output/tumor_vs_normal/filtered/post_filtered/M03.vcf"), 
-                         Manta = c("/rhome/lyu062/shared/coh_SV/Manta/T_vs_N_somatic_SV/converted_INV/sample_2.vcf", "/rhome/lyu062/shared/coh_SV/Manta/T_vs_N_somatic_SV/converted_INV/sample_3.vcf"))
+                         DELLY = c("D:/VCFComparison_manuscript/Example_VCF/DELLY/M02.vcf", "D:/VCFComparison_manuscript/Example_VCF/DELLY/M03.vcf"), 
+                         Manta = c("D:/VCFComparison_manuscript/Example_VCF/Manta/sample_2.vcf", "D:/VCFComparison_manuscript/Example_VCF/Manta/sample_3.vcf"))
 
 ```
 

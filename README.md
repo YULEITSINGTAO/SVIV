@@ -20,4 +20,9 @@ VCFComparison start from reading VCF files by sample map dataframe. Users can de
 | Sample_1  | Directory  | Directory |
 | Sample_2  | Directory  | Directory |
 
+## Read the vcf files into R
+Via sample map, function `Read_VCFs()` is applied to read the VCF files into the working environment. 
 
+```
+VCF_list <- Read_VCFs(sample_map)
+```
