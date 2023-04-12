@@ -1,4 +1,12 @@
-## Union of intervals
+#' Union of intervals
+#'
+#' @param bed_df
+#' @param verbose
+#'
+#' @return
+#' @export
+#'
+#' @examples
 union_bed_df <- function(bed_df, verbose = FALSE){
     union_df_list <- list()
     chromosomes <- paste0("chr", c(1:22,"X","Y"))
@@ -33,4 +41,4 @@ union_bed_list <- function(bed_list, verbose = FALSE){
     return(bed_list)
 }
 
-
+`%U%`= function(x,y){x+y}
