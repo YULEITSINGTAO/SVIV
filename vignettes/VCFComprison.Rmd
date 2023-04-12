@@ -78,7 +78,7 @@ sample_map <- data.frame(patient_ID = c("patient_1", "patient_2"),
 Based on the sample mapping file, we can read the vcf files into R use the function `Read_VCFs`. 
 
 ```{r eval = FALSE}
-VCF_list <- Read_VCFs(sample_map)
+VCF_List <- Read_VCFs(sample_map)
 ```
 
 ```{r eval = FALSE}
@@ -156,6 +156,10 @@ The hard filter step is based on the parameter ("PASS" and "Precise") on each ca
 ```{r eval = FALSE}
 Filtered_VCF_List <- Hard_Filter(VCF_List, Filter_Standard = "Both")
 ```
+
+## Extract the 
+
+
 
 ## Merging the callers results of samples
 

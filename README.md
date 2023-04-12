@@ -11,27 +11,5 @@ library(devtools)
 install_github("YULEITSINGTAO/VCFComparison")
 ```
 
-## Sample map
-
-VCFComparison start from reading VCF files by sample map dataframe. Users can define a dataframe in the format as a sample map.  
-
-| Sample ID  | Caller1 |Caller2|
-| ------------- | ------------- | ------------- | 
-| Sample_1  | Directory  | Directory |
-| Sample_2  | Directory  | Directory |
-
-## Read the vcf files into R
-Via sample map, function `Read_VCFs()` is applied to read the VCF files into the working environment. 
-
-```
-VCF_list <- Read_VCFs(sample_map)
-```
-In the VCF_list, the VCF files are stored by sample ID
-
-![Data struce of VCF_list](./vignettes/Figures/VCF_Structure_List.png)
-
-
-## Filter and Extract VCF_list 
-```
-VCF_list <- Read_VCFs(sample_map)
-```
+## The manual of VCFComparison
+Please check the vignettes. 

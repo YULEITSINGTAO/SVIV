@@ -89,6 +89,3 @@ SV_type_List <- function(VCF_list, SV_type){
 
 
 
-
-
-
