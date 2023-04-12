@@ -28,7 +28,7 @@ VCF_list <- Read_VCFs(sample_map)
 ```
 In the VCF_list, the VCF files are stored by sample ID
 
-![Data struce of VCF_list](./Figures/VCF_Structure_List.png)
+![Data struce of VCF_list](./vignettes/Figures/VCF_Structure_List.png)
 
 
 ## Filter and Extract VCF_list 
