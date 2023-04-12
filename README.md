@@ -13,20 +13,11 @@ install_github("YULEITSINGTAO/VCFComparison")
 
 ## Sample map
 
+VCFComparison start from reading VCF files by sample map dataframe. Users can define a dataframe in the format as a sample map.  
+
 | Sample ID  | Caller1 |Caller2|
-| ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- | 
 | Sample_1  | Directory  | Directory |
 | Sample_2  | Directory  | Directory |
 
-## Progress
-### Data Process
-- [x] 1. Import VCFs
-- [ ] 2. Chop intervals (need to improve)
-- [x] 3. Define operators to combine the results from different callers
-- [ ] 4. Collect SV features 
-- [ ] 5. Cluster translocation SVs
-### Visualization
-- [x] 1. x-y SV overview all chromosomes
-- [x] 2. x-y SV overview specific chromosomes
-- [ ] 3. Circos plot of SVs histogram
 
