@@ -1,4 +1,5 @@
-chr,start,chr,start
+Break point 1,,Break point 2,
+Chromosome,Position,Chromosome,Position
 chr1,98723726,chr2,115114422
 chr1,177408163,chr2,106068260
 chr1,175681463,chr2,235063885

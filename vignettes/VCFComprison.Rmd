@@ -8,10 +8,17 @@ author:
   affiliation: University of California, Riverside
   email: lzhan140@ucr.edu 
 package: VCFComparison
-output:
-  BiocStyle::html_document
+output: 
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: vignette
+    toc: true
+    number_sections: true
+    fig_caption: true
+    
+bibliography: references.bib  
 abstract: |
-  Description of your vignette
+
 vignette: |
   %\VignetteIndexEntry{VCFComparison}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,189 +26,154 @@ vignette: |
 ---
 
 # Introduction
+
+Whole genome sequencing (WGS) is a powerful tool for detecting structure variations (SV) in genomes. Typically, multiple SV callers are applied to a single patient's WGS data to increase the comprehensiveness of the results. However, there is currently a lack of tools to compare and merge the results from different callers. To address this issue, we have developed an R package called VCFComparison. This package enables users to manipulate SV results from different callers and identify the most confident structure mutations. Furthermore, we propose a projection method for complex translocations, which projects each translocation to a point on Cartesian coordinate system. This is followed by a clustering method to characterize the key translocation information and summarize the translocation mutations for the user. Overall, our approach provides a useful framework for analyzing SVs in WGS data.
+
 ## Install Package
 
-To install this package, start R (version "4.1") and enter:
+To install this package, start R (version "4.2") and enter:
 
 ```{r eval = F}
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-
-BiocManager::install("VCFComparison")
-
+library(devtools)
+install_github("YULEITSINGTAO/VCFComparison")
 ```
+
 A package only needs to be installed once. Load the package into an R session with
 
 ```{r eval = F}
 library(VCFComparison)
 ```
+
 ## Structure variation
 
-Structure variants (SVs) are large genomic alterations which typically larger than 50 bp. Nowdays, multiple SV callers can detect the structure variation such as DELLY, Manta, GRIDSS, LUMPY etc @rausch2012delly, @chen2016manta, @cameron2017gridss, @layer2014lumpy. 
+Structure variants (SVs) are large genomic alterations which typically larger than 50 bp. Nowdays, multiple SV callers can detect the structure variation such as DELLY (@rausch2012delly), Manta (@chen2016manta), GRIDSS (@cameron2017gridss), LUMPY (@layer2014lumpy), etc.
 
 A common challenge of SV detection is the large false positive rate. Even each caller can provide the filter parameter to help users to filter the SV calls, we have concerns about the accuracy of the result from only one caller. Therefore, we need to apply the SV calling through multiple callers about combine the result to detect the most consistent calls among callers.
 
 ## Type of structure variation
-In high-level, the structure variation can be divided into deletion, duplication, insertion, inversion and translocation. When we deal with the structure variation, translocation is the most different structure variation with the others. Deletion, duplication, insertion and inversion can be defined use a range on one chromosome but translocation is defined by two positions on different chromosomes. Therefore, in the VCFComparison, the methods applied on deletion, duplication, insertion and inversion are different with the methods applied on translocations. 
+
+In high-level, the structure variation can be divided into deletion, duplication, insertion, inversion and translocation. When we deal with the structure variation, translocation is the most different structure variation with the others. Deletion, duplication, insertion and inversion can be defined use a range on one chromosome but translocation is defined by two positions on different chromosomes. Therefore, in the VCFComparison, the methods applied on deletion, duplication, insertion and inversion are different with the methods applied on translocations.
 
 ## Functions of VCFComparison
 
-VCFComparison is a R package to help users combine the result from different caller and unify the calls then perform visualization on the detected SVs. Figure 1 shows the workflow of VCFComparison. Users can use VCFComparison package to (1) filter and combine the results from different callers; (2) Collect and summarize the SV features and (3) explore the association between SVs with clinical outcomes. Figure \@ref(fig:PackageWorkflow) shows the workflow of VCFComparison.    
+VCFComparison is a R package to help users combine the result from different caller and unify the calls then perform visualization on the detected SVs. Figure 1 shows the workflow of VCFComparison. Users can use VCFComparison package to (1) filter and combine the results from different callers; (2) Collect and summarize the SV features and (3) explore the association between SVs with clinical outcomes. Figure 1 shows the workflow of VCFComparison.
 
-```{r PackageWorkflow, fig.cap="The workflow of VCFComparison", echo=FALSE}
+```{r PackageWorkflow, fig.cap="Figure 1: The workflow of VCFComparison", echo=FALSE}
 knitr::include_graphics('./Figures/VCF_Comparison_Package_Workflow.png')
 ```
 
 # Data Preparation
+
 ## Sample map file
 
-Usually, in a structure variation detection project, researchers apply multiple callers in same cohorts. Therefore, users need to provide sample mapping data frame to indicate the sample ID and the directory of different callers on different sample. Here we use two callers and two patients as an example. 
+Usually, in a structure variation detection project, researchers apply multiple callers in same cohorts. Therefore, users need to provide sample mapping data frame to indicate the sample ID and the directory of different callers on different sample. Here we use two callers and two patients as an example.
 
 **VCFComparison works based on the individual .vcf file from each caller.**
 
-We define the sample mapping data frame as follow: 
-
-| Sample ID | Caller 1 | Caller 2 |
-|----------------|-----------------------------------------------------------------------|-----------------------------
-| patient_1 | '/user/caller1/1.vcf' | '/user/caller2/1.vcf'| 
-| patient_2 | '/user/caller1/2.vcf' | '/user/caller2/2.vcf'| 
+We define the sample mapping data frame as follow:
 
 ```{r eval= F}
-sample_map <- data.frame(patient_ID = c("patient_1", "patient_2"), 
-                         DELLY = c("D:/VCFComparison_manuscript/Example_VCF/DELLY/M02.vcf", "D:/VCFComparison_manuscript/Example_VCF/DELLY/M03.vcf"), 
-                         Manta = c("D:/VCFComparison_manuscript/Example_VCF/Manta/sample_2.vcf", "D:/VCFComparison_manuscript/Example_VCF/Manta/sample_3.vcf"))
+sample_map <- data.frame(patient_ID = c("Sample_1", "Sample_2"), 
+                         caller1 = c("/user/caller1/sample_1.vcf", 
+                                     "/user/caller1/sample_2.vcf"), 
+                         caller2 = c("/user/caller2/sample_1.vcf", 
+                                     "/user/caller2/sample_1.vcf"))
 
 ```
 
-## Read the vcf files into R. 
+| Sample ID | Caller 1                     | Caller 2                     |
+|-----------|------------------------------|------------------------------|
+| Sample_1  | '/user/caller1/sample_1.vcf' | '/user/caller2/sample_1.vcf' |
+| Sample_2  | '/user/caller1/sample_1.vcf' | '/user/caller2/sample_2.vcf' |
 
-Based on the sample mapping file, we can read the vcf files into R use the function `Read_VCFs`. 
+## Read the vcf files into R.
+
+Based on the sample mapping file, we can read the vcf files into R use the function `Read_VCFs`.
 
 ```{r eval = FALSE}
 VCF_List <- Read_VCFs(sample_map)
 ```
 
-```{r eval = FALSE}
-> VCF_list
-$DELLY
-$DELLY$patient_1
-***** Object of Class vcfR *****
-12 samples
-19 CHROMs
-49 variants
-Object size: 0.1 Mb
-0 percent missing data
-*****        *****         *****
+VCF List is the basic data type in this package. In a VCF List, it contents all of the partient SV results called by the provided callers. Figure \@ref(fig:StrucureofVCFList) shows the structure of the VCF list data type.
 
-$DELLY$patient_2
-***** Object of Class vcfR *****
-12 samples
-19 CHROMs
-51 variants
-Object size: 0.1 Mb
-0 percent missing data
-*****        *****         *****
-
-
-$Manta
-$Manta$patient_1
-***** Object of Class vcfR *****
-2 samples
-34 CHROMs
-375 variants
-Object size: 0.2 Mb
-0 percent missing data
-*****        *****         *****
-
-$Manta$patient_2
-***** Object of Class vcfR *****
-2 samples
-40 CHROMs
-655 variants
-Object size: 0.3 Mb
-0 percent missing data
-*****        *****         *****
-
-```
-
-VCF List is the basic data type in this package. In a VCF List, it contents all of the partient SV results called by the provided callers. Figure \@ref(fig:VCFListStructure) shows the structure of the VCF list data type. 
-
-```{r VCFListStructure, fig.cap="Strucure of VCF List.", echo=FALSE}
+```{r StrucureofVCFList, echo=FALSE, fig.cap="Strucure of VCF List.", echo=FALSE}
 knitr::include_graphics('./Figures/VCF_Structure_List.png')
 ```
 
 ## Subtract the useful information from the VCF_list
 
-There are three fields in a vcf file including meta, info and geno: 
+The basic cell of VCF_List is VCF file, we here we provide a brief introduction about VCF file.
 
-[1] **meta** the head lines in the vcf. meta-information is included after the ## string and must be key=value pairs.
+There are three fields in a vcf file including meta, info and geno:
+
+[1] **meta** the head lines in the vcf. meta-information is included after the \## string and must be key=value pairs.
 
 [2] **fix** is a table consisted by 6 columns: CHROM POS ID REF ALT QUAL FILTER INFO
 
-[3] **gt** notes the genotype information for of each samples appears in the vcf. 
+[3] **gt** notes the genotype information for of each samples appears in the vcf.
 
-**_NOTE:_** The detailed description about vcf files please check the wikipedia link: [Variant Call Format](https://en.wikipedia.org/wiki/Variant_Call_Format)
-
-```{r VCFExample, fig.cap="An example of VCF file", echo=FALSE}
-knitr::include_graphics('./Figures/VCF_example.png')
-```
-
-## Generate overlook statistics about the SVs among in specific patient or whole population
-
-
+***NOTE:*** The detailed description about vcf files please check the wikipedia link: [Variant Call Format](https://en.wikipedia.org/wiki/Variant_Call_Format)
 
 ## Filter the vcf files
-The hard filter step is based on the parameter ("PASS" and "Precise") on each callers. Users can set the "PASS", "Precise" or "Both" to filter the SVs. In this example, we use Both criteria i.e. the calls should pass the read quality criteria and also have split reads support. The package provide the function `Hard_Filter` to perform the filter procedure. 
+
+In general case, the caller put the filter infromation in the VCF file to note the confidence of the SV event. To avoid low confident result introduced into the analysis workflow, the first step is to filter the VCF files (i.e. VCF_List). The hard filter step is based on the parameter ("PASS" and "Precise") on each callers. Users can set the "PASS", "Precise" or "Both" to filter the SVs. In this example, we use Both criteria i.e. the calls should pass the read quality criteria and also have split reads support. The package provide the function `Hard_Filter` to perform the filter procedure.
 
 ```{r eval = FALSE}
 Filtered_VCF_List <- Hard_Filter(VCF_List, Filter_Standard = "Both")
 ```
 
-## Extract the 
+## Extract the SV by type
 
+In this package, we define the structure variation in 5 types which are deletion ("DEL"), duplication ("DUP"), insertion ("INS"), inversion ("INV") and translocation ("TRANS"). In most of the cases, each type of the structure variation is analysised seperately. Therefore, we extract the SV by type conducted by `SV_type_List()`
 
+```{r eval = FALSE}
+Deletion_List <- SV_type_List(Filtered_VCF_List, "DEL")
+Duplication_List <- SV_type_List(Filtered_VCF_List, "DUP")
+Insertion_List <- SV_type_List(Filtered_VCF_List, "INS")
+Inversion_List <- SV_type_List(Filtered_VCF_List, "INV")
+Trans_List <- SV_type_List(Filtered_VCF_List, "TRANS")
+```
 
 ## Merging the callers results of samples
 
-### Merging deletion, duplication, insertion and inversion. 
-Once the data is filtered and we should merge the result from different callers into a unified SV dataframe. The most common used merging methods are union and intersection. Here we should give a mathematical definition of union and intersection of deletion, duplication, insertion and inversion. We can use a range interval to define any variation in deletion, duplication, insertion and inversion. $sv = [start, end]$. For one sample, one type of structure and one call, we can define a SV set as
-$$SV_{[caller_i, SV\ type,\ patient_j]} = \{sv_1, sv_2, ...,sv_n\},$$
+### Merging deletion, duplication, insertion and inversion.
 
-where $caller_i$ is one of the software researchers used when called the structure;
+Once the data is filtered and we should merge the result from different callers into a unified SV dataframe. The most common used merging methods are union and intersection. Here we give a mathematical definition of union and intersection of deletion, duplication, insertion and inversion.
 
-$SV\ type \in \{deletion, duplication, insertion, inversion\}$; 
+We can use a range interval to define any variation in deletion, duplication, insertion and inversion. $sv = [start, end]$. For one sample, one type of structure and one call, we can define a SV set as $$SV_{[\textrm{caller}_i, \textrm{type},\textrm{sample}_j]} = \{\textrm{sv}_1, \textrm{sv}_2, ...,\textrm{sv}_n\},$$
 
-$patient_j$ is the $j^{th}$ patient in the cohort. 
+where
 
-**_NOTE:_** there is no overlapping region in any two of $sv_1, sv_2, ..., sv_n$. 
-**Overlapping**
-**Union and intersection** operations on sv regions.
-For two sv regions : $sv_1=[start_1, end_1]$ and $sv_2=[start_2, end = 2]$, if $start_1 < end_2$ and $end_1 > start_2$
-**Union and intersection** operation on SV sets. 
+-   $\textrm{caller}_i$ is one of the software researchers used when called the structure;
+
+-   $\textrm{type} \in \{\textrm{deletion}, \textrm{duplication}, \textrm{insertion}, \textrm{inversion}\}$;
+
+-   $\textrm{sample}_j$ is the $j^{th}$ patient in the cohort.
 
 Once we define the SV set, then we can define the **union** and **intersection** operation of two sets. Figure \@ref(fig:DefinitionOfUnionAndIntersection)
-
 
 ```{r DefinitionOfUnionAndIntersection, fig.cap="Definition of union and intersection.", echo=FALSE}
 knitr::include_graphics('./Figures/Union_and_Intersection.png')
 ```
 
-In VCFComparison, for deletion, duplication, insertion and inversion, the callers combining procedure is performed based on the union and intersection operation on the SV sets. Different from the ordinary union and intersection on whole callers, VCFComparison give the freedom to users that can select the dominant callers which provide the main result to keep the high accuracy. 
+In VCFComparison, for deletion, duplication, insertion and inversion, the callers combining procedure is performed based on the union and intersection operation on the SV sets. Different from the ordinary union and intersection on whole callers, VCFComparison give the freedom to users that can select the dominant callers which provide the main result to keep the high accuracy.
 
-Here we use the deletion as an example to sure how the merge works. 
+Here we use the deletion as an example to sure how the merge works. Caller names were use as  
+
 ```{r eval=FALSE}
-
-
+Deletion_DELLY_List <- Deletion_List$DELLY
+Deletion_Manta_List <- Deletion_List$Manta
 ```
 
 ### Merging translocation
-#### Ways to define trabslocations
+
+#### Ways to define translocations
+
 A translocation corresponding to two break ends on different chromosomes. We can use $(chromosome\ i, Position\ m)$ and $(chromosome\ j, Position\ n)$ to represent two break ends. Therefore, in a translocation table, one transocation should at least have 4 four columns which records the position of two break ends. For example
 
 ```{r}
 Simulated_translocation_bed <- readRDS("../inst/extdata/simulated_translocation.rds")
 Simulated_translocation_bed
-
 ```
 
 We can use a ciricos plot to represent four translocations in Figure \@ref(fig:TranslocationCircosExample)
@@ -210,8 +182,7 @@ We can use a ciricos plot to represent four translocations in Figure \@ref(fig:T
 knitr::include_graphics('./Figures/Section_1_5_circos_example.png')
 ```
 
-
-Additionally, we we use a other way to define the translocation.For a given translocation, $(chromosome\ i, Position\ m); (chromosome\ j, Position\ n)$, we can construct a x-y axis which x axis represents the positions on $chromosome\ i$ and y axis represents the position on $chromsome\ j$. Then every translocation can be represented as a scatter on the x-y coordinate.  
+Additionally, we we use a other way to define the translocation.For a given translocation, $(chromosome\ i, Position\ m); (chromosome\ j, Position\ n)$, we can construct a x-y axis which x axis represents the positions on $chromosome\ i$ and y axis represents the position on $chromsome\ j$. Then every translocation can be represented as a scatter on the x-y coordinate.
 
 ```{r CircosTranslocationProjection, fig.cap="Translocation projection.", echo=FALSE}
 knitr::include_graphics('./Figures/Section_1_5_circos_Translocation_Projection.png')
@@ -227,58 +198,16 @@ For a translocation, it is a challenging work to merge the translocation from di
 
 Here we provide two ways to merge the translocation.
 
-#### Windows based method
-Firstly, we need to divide the whole genome into equal width bins using function `Genome_Windows()`.
-
-```{r eval = F}
-bins <- Genome_Windows("hg19", 5000000)
-
-```
-
-```{r eval = F}
-> bins
-     Chr     Start       End
-1   chr1         1   5000000
-2   chr1   5000001  10000000
-3   chr1  10000001  15000000
-4   chr1  15000001  20000000
-5   chr1  20000001  25000000
-
-```
-
-The *bins* notes the chromosome number, start position and end position of every bin (or window). Then, we can align the translocation table to the bin reference. Through function `Align_to_Bins`, we can relax the "point to point" translocation to the range to range translocation. Then we can count the frequence of trnaslcation happened between two range then detect the common translocations. 
-
-
-
-
 #### Clustering based method
 
-# Feature Extraction
-## Region based structures variations
 
-## Translocation 
-
-# Example dataset
-
-We used the R package [RSVSim](https://www.bioconductor.org/packages/release/bioc/html/RSVSim.html) to add the structure variations in the [hg19](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html) and get the rearranged genome, then, the short reads simulator [ART](https://www.niehs.nih.gov/research/resources/software/biostatistics/art/) was applied to generate the 100x depth short reads. At last, we applied the SV callers to get the results. The workflow of simulated example dataset is in Figure \@ref(fig:WorkflowofExampleDataset)
-
-```{r WorkflowofExampleDataset, fig.cap="Workflow of example dataset.", echo=FALSE}
-knitr::include_graphics('./Figures/workflow_of_example_data.png')
-```
+# Structure variation visulization
 
 
-# Statistics Models
-VCFComparison merged the results from multiple callers and abstract structure features based on the SVs among whole cohorts. Then, based on the extracted features. Users can apply multiple models to select key features and genes. 
+# References {.unnumbered}
 
-## Classification Models
-
-## Regression Models
-### Parametric Models
-
-### Non-parametric Models
-# References
-
-<div id="refs"></div>
+::: {#refs}
+:::
 
 # Session info {.unnumbered}
 
