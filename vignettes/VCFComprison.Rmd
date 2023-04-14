@@ -161,15 +161,23 @@ In VCFComparison, for deletion, duplication, insertion and inversion, the caller
 Here we use the deletion as an example to sure how the merge works. Caller names were use as  
 
 ```{r eval=FALSE}
-Deletion_DELLY_List <- Deletion_List$DELLY
-Deletion_Manta_List <- Deletion_List$Manta
+Deletion_caller1_List <- Deletion_List$caller1
+Deletion_caller2_List <- Deletion_List$caller2
+```
+
+In VCFComparison, we defined two operation which are intersection (%I%) and union (%U%). Users can use these two operations to merge the result. 
+
+```{r eval=FALSE}
+Deletion_caller1_List %U% Deletion_caller2_List
+
+Deletion_caller1_List %I% Deletion_caller2_List
 ```
 
 ### Merging translocation
 
 #### Ways to define translocations
 
-A translocation corresponding to two break ends on different chromosomes. We can use $(chromosome\ i, Position\ m)$ and $(chromosome\ j, Position\ n)$ to represent two break ends. Therefore, in a translocation table, one transocation should at least have 4 four columns which records the position of two break ends. For example
+A translocation corresponding to two break ends on different chromosomes. We can use $(\textrm{chromosome}\ i, \textrm{Position}\ m)$ and $(\textrm{chromosome}\ j, \textrm{Position}\ n)$ to represent two break ends. Therefore, for a translocation event, two break points are detected. For example
 
 ```{r}
 Simulated_translocation_bed <- readRDS("../inst/extdata/simulated_translocation.rds")
@@ -199,7 +207,7 @@ For a translocation, it is a challenging work to merge the translocation from di
 Here we provide two ways to merge the translocation.
 
 #### Clustering based method
-
+Since translocation is a type of large scale 
 
 # Structure variation visulization
 

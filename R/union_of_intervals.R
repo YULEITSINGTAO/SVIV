@@ -7,11 +7,12 @@
 #' @export
 #'
 #' @examples
-union_bed_df <- function(bed_df, verbose = FALSE){
+union_bed_df <- function(bed_df_1, bed_df_2, verbose = FALSE){
     union_df_list <- list()
     chromosomes <- paste0("chr", c(1:22,"X","Y"))
     for (chr in chromosomes) {
-        chr_bed_df <- bed_df %>% dplyr::filter(Chr == chr)
+        chr_bed_df <- rbind(bed_df_1 %>% dplyr::filter(Chr == chr),  bed_df_2 %>% dplyr::filter(Chr == chr))
+
         if (nrow(chr_bed_df)==0){
             union_df_intervals <- data.frame(Chr = NA, Start = NA, End = NA)
             if (verbose == TRUE){
@@ -33,12 +34,17 @@ union_bed_df <- function(bed_df, verbose = FALSE){
 
 }
 
-union_bed_list <- function(bed_list, verbose = FALSE){
-    for (i in names(bed_list)){
-        bed_list[[i]] <- union_bed_df(bed_list[[i]])
+union_bed_list <- function(bed_list_1, bed_list_2, verbose = FALSE){
+
+    bed_list <- list()
+
+    for (i in names(bed_list_1)){
+        bed_list[[i]] <- union_bed_df(bed_list_1[[i]], bed_list_2[[i]])
 
     }
     return(bed_list)
 }
 
-`%U%`= function(x,y){x+y}
+'%U%' <- function(bed_list_1, bed_list_2){
+    union_bed_list(bed_list_1, bed_list_2)
+}
