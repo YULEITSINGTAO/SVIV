@@ -94,9 +94,9 @@ Based on the sample mapping file, we can read the vcf files into R use the funct
 VCF_List <- Read_VCFs(sample_map)
 ```
 
-VCF List is the basic data type in this package. In a VCF List, it contents all of the partient SV results called by the provided callers. Figure \@ref(fig:StrucureofVCFList) shows the structure of the VCF list data type.
+VCF List is the basic data type in this package. In a VCF List, it contents all of the partient SV results called by the provided callers. Figure \@ref(fig:str) shows the structure of the VCF list data type.
 
-```{r StrucureofVCFList, echo=FALSE, fig.cap="Strucure of VCF List.", echo=FALSE}
+```{r str, echo=FALSE, fig.cap="Strucure of VCF List.", echo=FALSE}
 knitr::include_graphics('./Figures/VCF_Structure_List.png')
 ```
 
@@ -177,7 +177,7 @@ Deletion_caller1_List %I% Deletion_caller2_List
 
 #### Ways to define translocations
 
-A translocation corresponding to two break ends on different chromosomes. We can use $(\textrm{chromosome}\ i, \textrm{Position}\ m)$ and $(\textrm{chromosome}\ j, \textrm{Position}\ n)$ to represent two break ends. Therefore, for a translocation event, two break points are detected. For example
+A translocation corresponding to two break ends on different chromosomes. We can use $(\textrm{Chromosome}\ i, \textrm{Position}\ m)$ and $(\textrm{Chromosome}\ j, \textrm{Position}\ n)$ to represent two break ends. Therefore, for a translocation event, two break points are detected. For example
 
 ```{r}
 Simulated_translocation_bed <- readRDS("../inst/extdata/simulated_translocation.rds")
@@ -190,7 +190,7 @@ We can use a ciricos plot to represent four translocations in Figure \@ref(fig:T
 knitr::include_graphics('./Figures/Section_1_5_circos_example.png')
 ```
 
-Additionally, we we use a other way to define the translocation.For a given translocation, $(chromosome\ i, Position\ m); (chromosome\ j, Position\ n)$, we can construct a x-y axis which x axis represents the positions on $chromosome\ i$ and y axis represents the position on $chromsome\ j$. Then every translocation can be represented as a scatter on the x-y coordinate.
+Additionally, we we use a other way to define the translocation. For a given translocation, $(\textrm{Chromosome}\ i, \textrm{Position}\ m); (\textrm{Chromosome}\ j, \textrm{Position}\ n)$, we can construct a x-y axis which x axis represents the positions on $\textrm{Chromosome}\ i$ and y axis represents the position on $\textrm{Chromsome}\ j$. Then every translocation can be represented as a scatter on the x-y coordinate.
 
 ```{r CircosTranslocationProjection, fig.cap="Translocation projection.", echo=FALSE}
 knitr::include_graphics('./Figures/Section_1_5_circos_Translocation_Projection.png')
