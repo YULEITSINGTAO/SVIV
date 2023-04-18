@@ -10,9 +10,6 @@ SV_type_List(VCF_list, SV_type)
 \arguments{
 \item{SV_type}{}
 }
-\value{
-
-}
 \description{
 SV type extraction
 This function is used to extract specific SV types from the SV list

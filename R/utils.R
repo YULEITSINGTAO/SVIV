@@ -10,7 +10,7 @@
 #' @examples
 #' hg38coord()
 hg38coord <- function(){
-    hg38 <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38.bed"),
+    hg38 <- readr::read_tsv(system.file(package = "VCFComparison", "extdata", "hg38.bed"),
                             col_names = FALSE, show_col_types = FALSE, progress = FALSE)
     names(hg38) <- c("Chrom", "Start", "End", "Abs_start", "Abs_end")
     structure(hg38, class = c("VCFComparison_hg38coord", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
@@ -35,9 +35,9 @@ print.VCFComparison_hg38coord <- function(x) {
 #' @rdname hg38coord
 #' @export
 #' @examples
-#' hg38specail()
+#' hg38special()
 hg38special <- function(){
-    hg38_special <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38_specail_regions.bed"),
+    hg38_special <- readr::read_tsv(system.file(package = "VCFComparison","extdata", "hg38_specail_regions.bed"),
                                     col_names = FALSE, show_col_types = FALSE, progress = FALSE)
     names(hg38_special) <- c("Chrom", "Start", "End", "Region")
     structure(hg38_special, class = c("VCFComparison_hg38special", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))

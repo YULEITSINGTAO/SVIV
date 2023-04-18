@@ -48,3 +48,11 @@ vignettes/*.pdf
 # top level csv tsv files
 #*.csv
 *.tsv
+
+
+#
+.idea
+
+
+#
+.DS_Store

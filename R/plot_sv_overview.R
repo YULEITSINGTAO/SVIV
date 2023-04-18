@@ -121,7 +121,7 @@
 
 #' Plot the overview of SVs
 #' @description Plot SVs across all chromosomes and across all samples on a big segment plot
-#' @param sv dataframe, a table with all SVs in a `bed`-like format.
+#' @param sv dataframe, a table with all SVs in a `bed`-like format dataframe (tibble).
 #' Columns:
 #' - Chrom:  string, chromosome numbers
 #' - Start:  numeric integers, SV starting position
@@ -139,8 +139,9 @@
 #' - Abs_end:   numeric, optional, Chromosome absolute cumulative end position
 #'
 #' Use [hg38coord()] to get an example of hg38 reference
+#'
 #' @param show_BND bool, plot translocation break points on the plot? Default is
-#' `FALSE`. Showing a lot of BND can make the plot massy. BND break points are
+#' `FALSE`. Showing a lot of BND can make the plot messy. BND break points are
 #' marked with `X` symbols.
 #' @param title string, plot title
 #' @param title_hjust numeric, plot horizontal adjustment, default is trying to
@@ -152,8 +153,14 @@
 #' @param group_block bool, if `Group` column presents in the `sv` table, use
 #' solid lines to separate between each sample group?
 #' @param xend_expand numeric, a fraction to expand the x-axis. Sometimes the last
-#' chromosome is cropped, try increase this value a little bit some the last chromosome
+#' chromosome is cropped, try increase this value a little bit so the last chromosome
 #' can be displayed.
+#' @param plot_margin vector of numbers, length of 4, the plot margin, unit in cm. The default is only used
+#' to adjust the space on the left when group label is added, and it can prevent
+#' overcrowding. If there is no group information, ignore this.
+#' @param group_hjust numeric, a number to adjust the space between sample labels and
+#' group labels
+#' @param group_vjust numeric, a number to adjust the vertical alignment on Y-axis
 #' @param color_palette string, color names or color hex codes of what colors you want
 #' to use to mark SV types. The default is to follow package discrete color options.
 #'
@@ -161,18 +168,51 @@
 #' @export
 #'
 #' @examples
+#'
+#' # read in simulated SV data
+#' sv <- readr::read_csv(system.file(package = "VCFComparison","extdata", "Sim_SV.csv"))
+#' # create a table with 3 patients and each with 2 samples
+#' # for each sample, we give them 20 random SV events
+#' sample_info <- tibble::tibble(
+#'     Sample = rep(paste0("sample", 1:6), each = 20),
+#'     Group = rep(paste0("patient", 1:3), each = 2 * 20)
+#' )
+#' # bind the SV and sample information together
+#' set.seed(99)
+#' sv <- sv %>%
+#'     dplyr::slice_sample(n = 120) %>%
+#'     # the size of SVs are too small to see on overview plot,
+#'     # randomly add 1MB - 20MB length to each event start and end
+#'     # so we can see it clearly for the eaxmple.
+#'     # Please notice that in real life,
+#'     # the size of SV varies and you do not typically see them
+#'     # all in the MB-size range.
+#'     dplyr::rowwise() %>%
+#'     dplyr::mutate(
+#'         Start = Start - as.integer(runif(1, 1e6, 2e7)),
+#'         End = End - as.integer(runif(1, 1e6, 2e7))
+#'     ) %>%
+#'     dplyr::bind_cols(sample_info) %>%
+#'     # the required column is "Chrom" instead of "Chr", rename it.
+#'     dplyr::rename("Chrom" = "Chr")
+#'
+#'
+#' svOverviewPlot(sv)
 svOverviewPlot <- function(
     sv,
     ref = hg38coord(),
     show_BND = FALSE,
     title = "SV overview plot",
     title_hjust = 0.4,
-    xlab = "Chromosome",
-    ylab = "Sample",
+    ylab = "Chromosome",
+    xlab = "",
     alpha = 1,
     sample_block = TRUE,
     group_block = TRUE,
     xend_expand = 1.005,
+    plot_margin = c(0,0,0,0.5),
+    group_hjust = -5,
+    group_vjust = -0.5,
     color_palette = VCFComparisonOption("color_dis")
 ){
     logInfo("Inputs validating...")
@@ -213,7 +253,7 @@ svOverviewPlot <- function(
         ylab(ylab) +
         xlab(xlab) +
         ggtitle(title) +
-        coord_flip() +
+        coord_flip(clip = "off") +
         theme_minimal() +
         theme(
             legend.position="bottom",
@@ -277,9 +317,21 @@ svOverviewPlot <- function(
         sample_order <- sv_sample_group$Sample
         sv_sample_count <- sv_sample_group %>% dplyr::ungroup() %>% dplyr::count(Group) %>% dplyr::arrange(Group)
         vline_count <- cumsum(sv_sample_count$n)
+        # calculate where to add group label, the middle of samples in this group
+        group_y_label = (vline_count + c(0, vline_count[-length(vline_count)]))/2
+
         p <- p +
             scale_x_discrete(limits= sample_order) +
-            geom_vline(xintercept = vline_count[-length(vline_count)] + 0.5, size = 0.8)
+            geom_vline(xintercept = vline_count[-length(vline_count)] + 0.5, size = 0.8) +
+            ggplot2::geom_text(
+                data = data.frame(),
+                aes(y = 0, x = group_y_label, label = sv_sample_count$Group),
+                size = 5, check_overlap = TRUE, angle = 90,
+                hjust = group_vjust, vjust = group_hjust
+            ) +
+            theme(
+                plot.margin = ggplot2::margin(plot_margin, unit = "cm")
+            )
     }
     if(sample_block) {
         logInfo("Adding sample block info to plot...")
