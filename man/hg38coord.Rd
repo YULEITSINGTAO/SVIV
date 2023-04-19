@@ -20,5 +20,5 @@ a tibble coordinates in bed-like format
 }
 \examples{
 hg38coord()
-hg38specail()
+hg38special()
 }

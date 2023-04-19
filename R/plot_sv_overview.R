@@ -9,9 +9,9 @@
     has_group <- has_bnd_end <- TRUE
     if(!inherits(sv, "data.frame")) logErr("Input SVs must be a data.frame")
     sv_names <- names(sv)
-    if(!all( c("Chrom", "Start", "End", "Type", "Sample") %in% sv_names))
-       logErr('Input SV must have "Chrom", "Start", "End", "Type", "Sample" columns')
-    if(!inherits(sv$Chrom, c("factor", "character"))) logErr('Column "Chrom" must be `factor` or `character`')
+    if(!all( c("Chr", "Start", "End", "Type", "Sample") %in% sv_names))
+       logErr('Input SV must have "Chr", "Start", "End", "Type", "Sample" columns')
+    if(!inherits(sv$Chr, c("factor", "character"))) logErr('Column "Chr" must be `factor` or `character`')
     if(!inherits(sv$Sample, c("factor", "character"))) logErr('Column "Sample" must be `factor` or `character`')
     if(!inherits(sv$Start, "numeric")) logErr('Column "Start" must be `numeric`')
     if(!inherits(sv$End, "numeric")) logErr('Column "End" must be `numeric`')
@@ -52,9 +52,9 @@
     logInfo("Validating input reference genome coordinates")
     if(!inherits(ref, "data.frame")) logErr("Input reference must be a data.frame, use `refcoord()` to see an example", parentFrame = 3)
     ref_names <- names(ref)
-    if(!all( c("Chrom", "Start", "End") %in% ref_names))
-        logErr('Input reference must have "Chrom", "Start", "End" columns')
-    if(!inherits(ref$Chrom, c("character"))) logErr('Column "Chrom" must be `character`')
+    if(!all( c("Chr", "Start", "End") %in% ref_names))
+        logErr('Input reference must have "Chr", "Start", "End" columns')
+    if(!inherits(ref$Chr, c("character"))) logErr('Column "Chr" must be `character`')
     if(!inherits(ref$Start, "numeric")) logErr('Column "Start" must be `numeric`')
     if(!inherits(ref$End, "numeric")) logErr('Column "End" must be `numeric`')
 
@@ -67,7 +67,7 @@
         ref <- ref %>% dplyr::mutate(Abs_start = c(0, Abs_end[-nrow(ref)] + 1))
     } else if(!inherits(ref$Abs_start, c("numeric"))) logErr('Column "Abs_start" must be `numeric`')
     logInfo("Validating input reference genome success")
-    dplyr::select(ref, Chrom, Start, End, Abs_start, Abs_end)
+    dplyr::select(ref, Chr, Start, End, Abs_start, Abs_end)
 }
 
 #' validate input reference special region coordinates
@@ -78,9 +78,9 @@
     logInfo("Validating input gnome special region coordinates")
     if(!inherits(special, "data.frame")) logErr("Input special regions must be a data.frame, use `hg38special()` to see an example", parentFrame = 3)
     special_names <- names(special)
-    if(!all( c("Chrom", "Start", "End", "Region") %in% special_names))
-        logErr('Input special regions must have "Chrom", "Start", "End", "Region" columns')
-    if(!inherits(special$Chrom, c("character"))) logErr('Column "Chrom" must be `character`')
+    if(!all( c("Chr", "Start", "End", "Region") %in% special_names))
+        logErr('Input special regions must have "Chr", "Start", "End", "Region" columns')
+    if(!inherits(special$Chr, c("character"))) logErr('Column "Chr" must be `character`')
     if(!inherits(special$Start, "numeric")) logErr('Column "Start" must be `numeric`')
     if(!inherits(special$End, "numeric")) logErr('Column "End" must be `numeric`')
     if(!inherits(special$Region, "character")) logErr('Column "Region" must be `character`')
@@ -95,8 +95,8 @@
     logInfo("Calculating SV absolute positions ...")
     tibble::add_column(sv, Abs_start = NA, Abs_end = NA, .after = "End") %>%
         dplyr::mutate(
-            Abs_start = ref$Abs_start[match(Chrom, ref$Chrom)] + Start,
-            Abs_end = ref$Abs_start[match(Chrom, ref$Chrom)] + End
+            Abs_start = ref$Abs_start[match(Chr, ref$Chr)] + Start,
+            Abs_end = ref$Abs_start[match(Chr, ref$Chr)] + End
         )
 }
 
@@ -106,8 +106,8 @@
 #'
 #' @return BND only table with end location processed, 3 new columns
 #'
-#' 1. Bnd_end_1, string, chrom number of end position
-#' 2. Bnd_end_2, numeric, chrom position number of end position
+#' 1. Bnd_end_1, string, Chr number of end position
+#' 2. Bnd_end_2, numeric, Chr position number of end position
 #' 3. Bnd_end_abs, numeric, absolute position of end position
 .findBND <- function(sv, ref){
     sv %>%
@@ -115,7 +115,7 @@
         tidyr::unnest_wider(col = c("Bnd_end"), names_sep = "_") %>%
         mutate(
             Bnd_end_2 = as.numeric(Bnd_end_2),
-            Bnd_end_abs = ref$Abs_start[match(Bnd_end_1, ref$Chrom)] + Bnd_end_2
+            Bnd_end_abs = ref$Abs_start[match(Bnd_end_1, ref$Chr)] + Bnd_end_2
         )
 }
 
@@ -123,7 +123,7 @@
 #' @description Plot SVs across all chromosomes and across all samples on a big segment plot
 #' @param sv dataframe, a table with all SVs in a `bed`-like format dataframe (tibble).
 #' Columns:
-#' - Chrom:  string, chromosome numbers
+#' - Chr:  string, chromosome numbers
 #' - Start:  numeric integers, SV starting position
 #' - End:    numeric integers, SV ending p1osition
 #' - Type:   string, type of the SV, must be "BND", "DEL", "DUP", "INS", "INV"
@@ -132,7 +132,7 @@
 #'
 #' @param ref dataframe, reference gnome
 #' Columns:
-#' - Chrom:     string, Chromosome numbers,like  chr1-chr22, chrX, chrY
+#' - Chr:     string, Chromosome numbers,like  chr1-chr22, chrX, chrY
 #' - Start:     numeric, Chromosome start position
 #' - End:       numeric, Chromosome end position
 #' - Abs_start: numeric, optional, Chromosome absolute cumulative start position
@@ -192,9 +192,7 @@
 #'         Start = Start - as.integer(runif(1, 1e6, 2e7)),
 #'         End = End - as.integer(runif(1, 1e6, 2e7))
 #'     ) %>%
-#'     dplyr::bind_cols(sample_info) %>%
-#'     # the required column is "Chrom" instead of "Chr", rename it.
-#'     dplyr::rename("Chrom" = "Chr")
+#'     dplyr::bind_cols(sample_info)
 #'
 #'
 #' svOverviewPlot(sv)
@@ -266,7 +264,7 @@ svOverviewPlot <- function(
         ) +
         scale_y_continuous(
             breaks = (ref$Abs_start + ref$Abs_end)/2,
-            labels = ref$Chrom,
+            labels = ref$Chr,
             expand = c(0, 0),
             limit = c(0, max(ref$Abs_end) * xend_expand)
         ) +
