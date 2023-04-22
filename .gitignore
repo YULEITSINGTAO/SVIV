@@ -56,3 +56,8 @@ vignettes/*.pdf
 
 #
 .DS_Store
+
+## vignette html
+
+vigettes/VCFComparison.html
+
