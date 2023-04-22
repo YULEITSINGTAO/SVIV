@@ -184,7 +184,7 @@ Simulated_translocation_bed <- readRDS("../inst/extdata/simulated_translocation.
 Simulated_translocation_bed
 ```
 
-We can use a ciricos plot to represent four translocations in Figure \@ref(fig:TranslocationCircosExample)
+We can use a circos plot to represent four translocations in Figure \@ref(fig:TranslocationCircosExample)
 
 ```{r TranslocationCircosExample, fig.cap="Translocation.", echo=FALSE}
 knitr::include_graphics('./Figures/Section_1_5_circos_example.png')
