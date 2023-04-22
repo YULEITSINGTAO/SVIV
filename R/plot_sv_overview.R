@@ -9,9 +9,9 @@
     has_group <- has_bnd_end <- TRUE
     if(!inherits(sv, "data.frame")) logErr("Input SVs must be a data.frame")
     sv_names <- names(sv)
-    if(!all( c("Chrom", "Start", "End", "Type", "Sample") %in% sv_names))
-       logErr('Input SV must have "Chrom", "Start", "End", "Type", "Sample" columns')
-    if(!inherits(sv$Chrom, c("factor", "character"))) logErr('Column "Chrom" must be `factor` or `character`')
+    if(!all( c("Chr", "Start", "End", "Type", "Sample") %in% sv_names))
+       logErr('Input SV must have "Chr", "Start", "End", "Type", "Sample" columns')
+    if(!inherits(sv$Chr, c("factor", "character"))) logErr('Column "Chr" must be `factor` or `character`')
     if(!inherits(sv$Sample, c("factor", "character"))) logErr('Column "Sample" must be `factor` or `character`')
     if(!inherits(sv$Start, "numeric")) logErr('Column "Start" must be `numeric`')
     if(!inherits(sv$End, "numeric")) logErr('Column "End" must be `numeric`')
@@ -52,9 +52,9 @@
     logInfo("Validating input reference genome coordinates")
     if(!inherits(ref, "data.frame")) logErr("Input reference must be a data.frame, use `refcoord()` to see an example", parentFrame = 3)
     ref_names <- names(ref)
-    if(!all( c("Chrom", "Start", "End") %in% ref_names))
-        logErr('Input reference must have "Chrom", "Start", "End" columns')
-    if(!inherits(ref$Chrom, c("character"))) logErr('Column "Chrom" must be `character`')
+    if(!all( c("Chr", "Start", "End") %in% ref_names))
+        logErr('Input reference must have "Chr", "Start", "End" columns')
+    if(!inherits(ref$Chr, c("character"))) logErr('Column "Chr" must be `character`')
     if(!inherits(ref$Start, "numeric")) logErr('Column "Start" must be `numeric`')
     if(!inherits(ref$End, "numeric")) logErr('Column "End" must be `numeric`')
 
@@ -67,7 +67,7 @@
         ref <- ref %>% dplyr::mutate(Abs_start = c(0, Abs_end[-nrow(ref)] + 1))
     } else if(!inherits(ref$Abs_start, c("numeric"))) logErr('Column "Abs_start" must be `numeric`')
     logInfo("Validating input reference genome success")
-    dplyr::select(ref, Chrom, Start, End, Abs_start, Abs_end)
+    dplyr::select(ref, Chr, Start, End, Abs_start, Abs_end)
 }
 
 #' validate input reference special region coordinates
@@ -78,9 +78,9 @@
     logInfo("Validating input gnome special region coordinates")
     if(!inherits(special, "data.frame")) logErr("Input special regions must be a data.frame, use `hg38special()` to see an example", parentFrame = 3)
     special_names <- names(special)
-    if(!all( c("Chrom", "Start", "End", "Region") %in% special_names))
-        logErr('Input special regions must have "Chrom", "Start", "End", "Region" columns')
-    if(!inherits(special$Chrom, c("character"))) logErr('Column "Chrom" must be `character`')
+    if(!all( c("Chr", "Start", "End", "Region") %in% special_names))
+        logErr('Input special regions must have "Chr", "Start", "End", "Region" columns')
+    if(!inherits(special$Chr, c("character"))) logErr('Column "Chr" must be `character`')
     if(!inherits(special$Start, "numeric")) logErr('Column "Start" must be `numeric`')
     if(!inherits(special$End, "numeric")) logErr('Column "End" must be `numeric`')
     if(!inherits(special$Region, "character")) logErr('Column "Region" must be `character`')
@@ -95,8 +95,8 @@
     logInfo("Calculating SV absolute positions ...")
     tibble::add_column(sv, Abs_start = NA, Abs_end = NA, .after = "End") %>%
         dplyr::mutate(
-            Abs_start = ref$Abs_start[match(Chrom, ref$Chrom)] + Start,
-            Abs_end = ref$Abs_start[match(Chrom, ref$Chrom)] + End
+            Abs_start = ref$Abs_start[match(Chr, ref$Chr)] + Start,
+            Abs_end = ref$Abs_start[match(Chr, ref$Chr)] + End
         )
 }
 
@@ -106,8 +106,8 @@
 #'
 #' @return BND only table with end location processed, 3 new columns
 #'
-#' 1. Bnd_end_1, string, chrom number of end position
-#' 2. Bnd_end_2, numeric, chrom position number of end position
+#' 1. Bnd_end_1, string, Chr number of end position
+#' 2. Bnd_end_2, numeric, Chr position number of end position
 #' 3. Bnd_end_abs, numeric, absolute position of end position
 .findBND <- function(sv, ref){
     sv %>%
@@ -115,15 +115,15 @@
         tidyr::unnest_wider(col = c("Bnd_end"), names_sep = "_") %>%
         mutate(
             Bnd_end_2 = as.numeric(Bnd_end_2),
-            Bnd_end_abs = ref$Abs_start[match(Bnd_end_1, ref$Chrom)] + Bnd_end_2
+            Bnd_end_abs = ref$Abs_start[match(Bnd_end_1, ref$Chr)] + Bnd_end_2
         )
 }
 
 #' Plot the overview of SVs
 #' @description Plot SVs across all chromosomes and across all samples on a big segment plot
-#' @param sv dataframe, a table with all SVs in a `bed`-like format.
+#' @param sv dataframe, a table with all SVs in a `bed`-like format dataframe (tibble).
 #' Columns:
-#' - Chrom:  string, chromosome numbers
+#' - Chr:  string, chromosome numbers
 #' - Start:  numeric integers, SV starting position
 #' - End:    numeric integers, SV ending p1osition
 #' - Type:   string, type of the SV, must be "BND", "DEL", "DUP", "INS", "INV"
@@ -132,15 +132,16 @@
 #'
 #' @param ref dataframe, reference gnome
 #' Columns:
-#' - Chrom:     string, Chromosome numbers,like  chr1-chr22, chrX, chrY
+#' - Chr:     string, Chromosome numbers,like  chr1-chr22, chrX, chrY
 #' - Start:     numeric, Chromosome start position
 #' - End:       numeric, Chromosome end position
 #' - Abs_start: numeric, optional, Chromosome absolute cumulative start position
 #' - Abs_end:   numeric, optional, Chromosome absolute cumulative end position
 #'
 #' Use [hg38coord()] to get an example of hg38 reference
+#'
 #' @param show_BND bool, plot translocation break points on the plot? Default is
-#' `FALSE`. Showing a lot of BND can make the plot massy. BND break points are
+#' `FALSE`. Showing a lot of BND can make the plot messy. BND break points are
 #' marked with `X` symbols.
 #' @param title string, plot title
 #' @param title_hjust numeric, plot horizontal adjustment, default is trying to
@@ -152,8 +153,14 @@
 #' @param group_block bool, if `Group` column presents in the `sv` table, use
 #' solid lines to separate between each sample group?
 #' @param xend_expand numeric, a fraction to expand the x-axis. Sometimes the last
-#' chromosome is cropped, try increase this value a little bit some the last chromosome
+#' chromosome is cropped, try increase this value a little bit so the last chromosome
 #' can be displayed.
+#' @param plot_margin vector of numbers, length of 4, the plot margin, unit in cm. The default is only used
+#' to adjust the space on the left when group label is added, and it can prevent
+#' overcrowding. If there is no group information, ignore this.
+#' @param group_hjust numeric, a number to adjust the space between sample labels and
+#' group labels
+#' @param group_vjust numeric, a number to adjust the vertical alignment on Y-axis
 #' @param color_palette string, color names or color hex codes of what colors you want
 #' to use to mark SV types. The default is to follow package discrete color options.
 #'
@@ -161,18 +168,49 @@
 #' @export
 #'
 #' @examples
+#'
+#' # read in simulated SV data
+#' sv <- readr::read_csv(system.file(package = "VCFComparison","extdata", "Sim_SV.csv"))
+#' # create a table with 3 patients and each with 2 samples
+#' # for each sample, we give them 20 random SV events
+#' sample_info <- tibble::tibble(
+#'     Sample = rep(paste0("sample", 1:6), each = 20),
+#'     Group = rep(paste0("patient", 1:3), each = 2 * 20)
+#' )
+#' # bind the SV and sample information together
+#' set.seed(99)
+#' sv <- sv %>%
+#'     dplyr::slice_sample(n = 120) %>%
+#'     # the size of SVs are too small to see on overview plot,
+#'     # randomly add 1MB - 20MB length to each event start and end
+#'     # so we can see it clearly for the eaxmple.
+#'     # Please notice that in real life,
+#'     # the size of SV varies and you do not typically see them
+#'     # all in the MB-size range.
+#'     dplyr::rowwise() %>%
+#'     dplyr::mutate(
+#'         Start = Start - as.integer(runif(1, 1e6, 2e7)),
+#'         End = End - as.integer(runif(1, 1e6, 2e7))
+#'     ) %>%
+#'     dplyr::bind_cols(sample_info)
+#'
+#'
+#' svOverviewPlot(sv)
 svOverviewPlot <- function(
     sv,
     ref = hg38coord(),
     show_BND = FALSE,
     title = "SV overview plot",
     title_hjust = 0.4,
-    xlab = "Chromosome",
-    ylab = "Sample",
+    ylab = "Chromosome",
+    xlab = "",
     alpha = 1,
     sample_block = TRUE,
     group_block = TRUE,
     xend_expand = 1.005,
+    plot_margin = c(0,0,0,0.5),
+    group_hjust = -5,
+    group_vjust = -0.5,
     color_palette = VCFComparisonOption("color_dis")
 ){
     logInfo("Inputs validating...")
@@ -213,7 +251,7 @@ svOverviewPlot <- function(
         ylab(ylab) +
         xlab(xlab) +
         ggtitle(title) +
-        coord_flip() +
+        coord_flip(clip = "off") +
         theme_minimal() +
         theme(
             legend.position="bottom",
@@ -226,7 +264,7 @@ svOverviewPlot <- function(
         ) +
         scale_y_continuous(
             breaks = (ref$Abs_start + ref$Abs_end)/2,
-            labels = ref$Chrom,
+            labels = ref$Chr,
             expand = c(0, 0),
             limit = c(0, max(ref$Abs_end) * xend_expand)
         ) +
@@ -277,9 +315,21 @@ svOverviewPlot <- function(
         sample_order <- sv_sample_group$Sample
         sv_sample_count <- sv_sample_group %>% dplyr::ungroup() %>% dplyr::count(Group) %>% dplyr::arrange(Group)
         vline_count <- cumsum(sv_sample_count$n)
+        # calculate where to add group label, the middle of samples in this group
+        group_y_label = (vline_count + c(0, vline_count[-length(vline_count)]))/2
+
         p <- p +
             scale_x_discrete(limits= sample_order) +
-            geom_vline(xintercept = vline_count[-length(vline_count)] + 0.5, size = 0.8)
+            geom_vline(xintercept = vline_count[-length(vline_count)] + 0.5, size = 0.8) +
+            ggplot2::geom_text(
+                data = data.frame(),
+                aes(y = 0, x = group_y_label, label = sv_sample_count$Group),
+                size = 5, check_overlap = TRUE, angle = 90,
+                hjust = group_vjust, vjust = group_hjust
+            ) +
+            theme(
+                plot.margin = ggplot2::margin(plot_margin, unit = "cm")
+            )
     }
     if(sample_block) {
         logInfo("Adding sample block info to plot...")

@@ -9,9 +9,6 @@ sort_trans_bed(input_trans_bed)
 \arguments{
 \item{input_trans_bed}{}
 }
-\value{
-
-}
 \description{
 Sort Translocation Bed data
 }

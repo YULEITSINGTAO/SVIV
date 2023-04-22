@@ -11,9 +11,6 @@ Align_to_Bin(bed_file, bin_reference)
 \arguments{
 \item{bin_reference}{}
 }
-\value{
-
-}
 \description{
 Align_to_Bin
 This function can count the range SVs in given ranges. The given ranges can be bins.

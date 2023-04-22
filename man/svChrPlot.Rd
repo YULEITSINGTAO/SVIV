@@ -23,7 +23,7 @@ svChrPlot(
 \item{sv}{dataframe, a table with all SVs in a \code{bed}-like format.
 Columns:
 \itemize{
-\item Chrom:  string, chromosome numbers
+\item Chr:  string, chromosome numbers
 \item Start:  numeric integers, SV starting position
 \item End:    numeric integers, SV ending p1osition
 \item Type:   string, type of the SV, must be "BND", "DEL", "DUP", "INS", "INV"
@@ -43,8 +43,8 @@ This require you to have a \code{Group} column in \code{sv} table}
 \item{label_karyo}{bool, label regions on the chromsome?}
 
 \item{mark_bnd}{bool, mark translocation as "X" on the plot? Usually there will
-be a lot of BND events which may mass up the plot. Default is not to plot these
-BND.}
+be a lot of BND events which may mess up the plot. Default is not to plot these
+BNDs.}
 
 \item{show_legend}{bool, show legend?}
 
@@ -56,7 +56,8 @@ this number.}
 \item{alpha}{numeric, what is SV event block transparency value, between 0-1}
 
 \item{plot_colors}{character vector, what plot colors to use. Default follows
-package \link{setColorDiscrete} setting. You need to provide at least 5 colors.}
+package \link{setColorDiscrete} setting, see \code{?VCFComparisonOption}. You need to
+provide at least 5 colors.}
 
 \item{title}{string, plot title}
 }
@@ -69,4 +70,36 @@ Plot SVs by chromosome
 \details{
 You must install \code{karyoploteR} package to use this function. By default, this
 package is not installed.
+}
+\examples{
+# plot only when karyoploteR is installed
+if(!length(spsUtil::checkNameSpace("karyoploteR", quietly = TRUE))) {
+    # read in simulated SV data
+    sv <- readr::read_csv(system.file(package = "VCFComparison","extdata", "Sim_SV.csv"))
+    # create a table with 3 patients and each with 2 samples
+    # for each sample, we give them 20 random SV events
+    sample_info <- tibble::tibble(
+        Sample = rep(paste0("Sample", 1:6), each = 5),
+        Group = rep(paste0("Patient", 1:3), each = 2 * 5)
+    )
+    # bind the SV and sample information together
+    set.seed(99)
+    sv <- sv \%>\%
+        dplyr::filter(Chr == "chr14") \%>\%
+        dplyr::slice_sample(n = 30) \%>\%
+        # the size of SVs are too small to see on overview plot,
+        # randomly add 100KB - 1MB length to each event start and end
+        # so we can see it clearly for the eaxmple.
+        # Please notice that in real life,
+        # the size of SV varies and you do not typically see them
+        # all in the MB-size range.
+        dplyr::rowwise() \%>\%
+        dplyr::mutate(
+            Start = Start - as.integer(runif(1, 1e5, 1e6)),
+            End = End + as.integer(runif(1, 1e5, 1e6))
+        ) \%>\%
+        dplyr::bind_cols(sample_info)
+
+    svChrPlot(sv, chr = "chr14", title = "SVs on Chromosome 14")
+}
 }

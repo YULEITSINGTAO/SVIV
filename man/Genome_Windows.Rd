@@ -9,9 +9,6 @@ Genome_Windows(reference = "hg19", tilewidth = 5e+05)
 \arguments{
 \item{tilewidth}{}
 }
-\value{
-
-}
 \description{
 Genome Windows
 }

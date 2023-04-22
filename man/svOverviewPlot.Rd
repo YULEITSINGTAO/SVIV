@@ -10,20 +10,23 @@ svOverviewPlot(
   show_BND = FALSE,
   title = "SV overview plot",
   title_hjust = 0.4,
-  xlab = "Chromosome",
-  ylab = "Sample",
+  ylab = "Chromosome",
+  xlab = "",
   alpha = 1,
   sample_block = TRUE,
   group_block = TRUE,
   xend_expand = 1.005,
+  plot_margin = c(0, 0, 0, 0.5),
+  group_hjust = -5,
+  group_vjust = -0.5,
   color_palette = VCFComparisonOption("color_dis")
 )
 }
 \arguments{
-\item{sv}{dataframe, a table with all SVs in a \code{bed}-like format.
+\item{sv}{dataframe, a table with all SVs in a \code{bed}-like format dataframe (tibble).
 Columns:
 \itemize{
-\item Chrom:  string, chromosome numbers
+\item Chr:  string, chromosome numbers
 \item Start:  numeric integers, SV starting position
 \item End:    numeric integers, SV ending p1osition
 \item Type:   string, type of the SV, must be "BND", "DEL", "DUP", "INS", "INV"
@@ -34,7 +37,7 @@ Columns:
 \item{ref}{dataframe, reference gnome
 Columns:
 \itemize{
-\item Chrom:     string, Chromosome numbers,like  chr1-chr22, chrX, chrY
+\item Chr:     string, Chromosome numbers,like  chr1-chr22, chrX, chrY
 \item Start:     numeric, Chromosome start position
 \item End:       numeric, Chromosome end position
 \item Abs_start: numeric, optional, Chromosome absolute cumulative start position
@@ -44,7 +47,7 @@ Columns:
 Use \code{\link[=hg38coord]{hg38coord()}} to get an example of hg38 reference}
 
 \item{show_BND}{bool, plot translocation break points on the plot? Default is
-\code{FALSE}. Showing a lot of BND can make the plot massy. BND break points are
+\code{FALSE}. Showing a lot of BND can make the plot messy. BND break points are
 marked with \code{X} symbols.}
 
 \item{title}{string, plot title}
@@ -52,9 +55,9 @@ marked with \code{X} symbols.}
 \item{title_hjust}{numeric, plot horizontal adjustment, default is trying to
 move the title to the center of the plot}
 
-\item{xlab}{string, x axis label}
-
 \item{ylab}{string, y axis label}
+
+\item{xlab}{string, x axis label}
 
 \item{alpha}{numeric, transparency of symbol and segments, between 0 and 1}
 
@@ -64,8 +67,17 @@ move the title to the center of the plot}
 solid lines to separate between each sample group?}
 
 \item{xend_expand}{numeric, a fraction to expand the x-axis. Sometimes the last
-chromosome is cropped, try increase this value a little bit some the last chromosome
+chromosome is cropped, try increase this value a little bit so the last chromosome
 can be displayed.}
+
+\item{plot_margin}{vector of numbers, length of 4, the plot margin, unit in cm. The default is only used
+to adjust the space on the left when group label is added, and it can prevent
+overcrowding. If there is no group information, ignore this.}
+
+\item{group_hjust}{numeric, a number to adjust the space between sample labels and
+group labels}
+
+\item{group_vjust}{numeric, a number to adjust the vertical alignment on Y-axis}
 
 \item{color_palette}{string, color names or color hex codes of what colors you want
 to use to mark SV types. The default is to follow package discrete color options.}
@@ -75,4 +87,34 @@ returns a ggplot object
 }
 \description{
 Plot SVs across all chromosomes and across all samples on a big segment plot
+}
+\examples{
+
+# read in simulated SV data
+sv <- readr::read_csv(system.file(package = "VCFComparison","extdata", "Sim_SV.csv"))
+# create a table with 3 patients and each with 2 samples
+# for each sample, we give them 20 random SV events
+sample_info <- tibble::tibble(
+    Sample = rep(paste0("sample", 1:6), each = 20),
+    Group = rep(paste0("patient", 1:3), each = 2 * 20)
+)
+# bind the SV and sample information together
+set.seed(99)
+sv <- sv \%>\%
+    dplyr::slice_sample(n = 120) \%>\%
+    # the size of SVs are too small to see on overview plot,
+    # randomly add 1MB - 20MB length to each event start and end
+    # so we can see it clearly for the eaxmple.
+    # Please notice that in real life,
+    # the size of SV varies and you do not typically see them
+    # all in the MB-size range.
+    dplyr::rowwise() \%>\%
+    dplyr::mutate(
+        Start = Start - as.integer(runif(1, 1e6, 2e7)),
+        End = End - as.integer(runif(1, 1e6, 2e7))
+    ) \%>\%
+    dplyr::bind_cols(sample_info)
+
+
+svOverviewPlot(sv)
 }

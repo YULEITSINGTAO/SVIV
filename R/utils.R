@@ -10,9 +10,9 @@
 #' @examples
 #' hg38coord()
 hg38coord <- function(){
-    hg38 <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38.bed"),
+    hg38 <- readr::read_tsv(system.file(package = "VCFComparison", "extdata", "hg38.bed"),
                             col_names = FALSE, show_col_types = FALSE, progress = FALSE)
-    names(hg38) <- c("Chrom", "Start", "End", "Abs_start", "Abs_end")
+    names(hg38) <- c("Chr", "Start", "End", "Abs_start", "Abs_end")
     structure(hg38, class = c("VCFComparison_hg38coord", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 }
 
@@ -21,7 +21,7 @@ hg38coord <- function(){
 print.VCFComparison_hg38coord <- function(x) {
     cat(
         "Returning human hg38 genome coordinates\n",
-        tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
+        tblue("Chr:"), "Chromosome numbers, 1-22, X, Y\n",
         tblue("Start:"), "Chromosome start position\n",
         tblue("End:"), "Chromosome end position\n",
         tblue("Abs_start:"), "Chromosome absolute cumulative start position\n",
@@ -35,11 +35,11 @@ print.VCFComparison_hg38coord <- function(x) {
 #' @rdname hg38coord
 #' @export
 #' @examples
-#' hg38specail()
+#' hg38special()
 hg38special <- function(){
-    hg38_special <- readr::read_tsv(system.file(package = "VCFComparison", "inst","extdata", "hg38_specail_regions.bed"),
+    hg38_special <- readr::read_tsv(system.file(package = "VCFComparison","extdata", "hg38_specail_regions.bed"),
                                     col_names = FALSE, show_col_types = FALSE, progress = FALSE)
-    names(hg38_special) <- c("Chrom", "Start", "End", "Region")
+    names(hg38_special) <- c("Chr", "Start", "End", "Region")
     structure(hg38_special, class = c("VCFComparison_hg38special", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 }
 
@@ -47,7 +47,7 @@ hg38special <- function(){
 print.VCFComparison_hg38special <- function(x) {
     cat(
         "Returning human hg38 genome special regions' coordinates\n",
-        tblue("Chrom:"), "Chromosome numbers, 1-22, X, Y\n",
+        tblue("Chr:"), "Chromosome numbers, 1-22, X, Y\n",
         tblue("Start:"), "Chromosome start position\n",
         tblue("End:"), "Chromosome end position\n",
         tblue("Region:"), "Chromosome special region type, like centromere, telomere, Low Mappability, etc.\n"

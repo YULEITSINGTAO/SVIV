@@ -21,7 +21,7 @@ Imports:
     spsUtil,
     readr,
     stats
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 BugReports: https://github.com/YULEITSINGTAO/VCFComparison/issues
 URL: https://github.com/YULEITSINGTAO/VCFComparison
 Roxygen: list(markdown = TRUE)
