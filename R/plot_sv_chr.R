@@ -2,9 +2,10 @@
 
 
 #' Plot SVs by chromosome
-#'
+#' @description Plot SVs at chromosome level.
 #' @param sv dataframe, a table with all SVs in a `bed`-like format.
 #' Columns:
+#'
 #' - Chr:  string, chromosome numbers
 #' - Start:  numeric integers, SV starting position
 #' - End:    numeric integers, SV ending p1osition
@@ -85,7 +86,7 @@ svChrPlot <- function(
 ){
     # validations
     checkPkg("karyoploteR")
-    if(!isNamespaceLoaded("karyoploteR")) attachNamespace("karyoploteR")
+    # if(!isNamespaceLoaded("karyoploteR")) attachNamespace("karyoploteR")
     sv_has_group <- .validateSVdf(sv)$group
     logInfo("Filter by sample")
     if(!is.null(filter_sample)) {
@@ -130,16 +131,16 @@ svChrPlot <- function(
     Samples <- sv$Sample %>% unique()
     total_track <- length(Samples)
     # plot base
-    pp <- getDefaultPlotParams(plot.type = 1)
+    pp <- karyoploteR::getDefaultPlotParams(plot.type = 1)
     pp$leftmargin <- 0.2
     pp$data1height <- 30*length(Samples)
     logInfo("Plot base")
-    kp <- plotKaryotype(genome=ref, chromosomes = chr, plot.params = pp, main = title)
-    if(label_karyo) {logInfo("Add markers"); kpAddCytobandLabels(kp, force.all=TRUE, srt=90)}
+    kp <- karyoploteR::plotKaryotype(genome=ref, chromosomes = chr, plot.params = pp, main = title)
+    if(label_karyo) {logInfo("Add markers"); karyoploteR::kpAddCytobandLabels(kp, force.all=TRUE, srt=90)}
     if(show_legend) {
         logInfo("Add legends")
         total_events <- unique(sv$Type)
-        legend(x = "bottom", fill = plot_colors[total_events],
+        graphics::legend(x = "bottom", fill = plot_colors[total_events],
                legend = names(plot_colors[total_events]),
                horiz=TRUE, inset=c(0, legend_x_mar),
                xpd=TRUE, box.lwd = 0, bg = "transparent")
@@ -147,12 +148,12 @@ svChrPlot <- function(
     # loop through each sample
     lapply(seq_along(Samples), function(Sample_n) {
         # set up
-        at <- autotrack(current.track = Sample_n, total.tracks = total_track)
+        at <- karyoploteR::autotrack(current.track = Sample_n, total.tracks = total_track)
         r0 <- at$r0
         r1 <- at$r1
         Sample <- Samples[Sample_n]
         Types <- sv$Type %>% unique()
-        kpAddLabels(kp, labels=Sample, r0=r0, r1 = r1)
+        karyoploteR::kpAddLabels(kp, labels=Sample, r0=r0, r1 = r1)
         # start to plot
         lapply(Types, function(Type) {
             if(Type == "BND" && !mark_bnd) return(logInfo(c("BND skipped for ", Sample)))
@@ -163,16 +164,13 @@ svChrPlot <- function(
             # for non-BND
             if(Type != "BND") {
                 # rgb-A correction
-                type_color <- col2rgb(type_color) %>%
-                    {setNames(as.list(.), c("red", "green", "blue"))} %>%
-                    {.[['alpha']] <- 255*alpha; .[['maxColorValue']] <- 255; .} %>%
-                    {do.call(rgb, .)}
+                type_color <- ggplot2::alpha(type_color, alpha = alpha)
                 regions <- glue('{sv_sub$Chr}:{sv_sub$Start}-{sv_sub$End}')
-                kpPlotRegions(kp, data=regions, col=type_color, r0=r0, r1 = r1, avoid.overlapping = FALSE)
+                karyoploteR::kpPlotRegions(kp, data=regions, col=type_color, r0=r0, r1 = r1, avoid.overlapping = FALSE)
                 return(NULL)
             }
             # for BND
-            kpPoints(kp, chr = chr, x = sv_sub$Start, pch="x", cex = 1.25, col=type_color, y = (r0 + r1)/2)
+            karyoploteR::kpPoints(kp, chr = chr, x = sv_sub$Start, pch="x", cex = 1.25, col=type_color, y = (r0 + r1)/2)
             NULL
         })
     }) %>% invisible()

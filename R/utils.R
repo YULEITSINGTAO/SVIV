@@ -17,8 +17,8 @@ hg38coord <- function(){
 }
 
 
-#' @exportS3Method
-print.VCFComparison_hg38coord <- function(x) {
+#' @exportS3Method base::print
+print.VCFComparison_hg38coord <- function(x, ...) {
     cat(
         "Returning human hg38 genome coordinates\n",
         tblue("Chr:"), "Chromosome numbers, 1-22, X, Y\n",
@@ -43,8 +43,8 @@ hg38special <- function(){
     structure(hg38_special, class = c("VCFComparison_hg38special", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 }
 
-#' @exportS3Method
-print.VCFComparison_hg38special <- function(x) {
+#' @exportS3Method base::print
+print.VCFComparison_hg38special <- function(x, ...) {
     cat(
         "Returning human hg38 genome special regions' coordinates\n",
         tblue("Chr:"), "Chromosome numbers, 1-22, X, Y\n",
@@ -122,7 +122,7 @@ setColorContinuous <- function(plot_colors = "current", muted = FALSE) {
                    else if (all(plot_colors %in% "current"))  VCFComparisonOption("color_cont")
                    else                                plot_colors
     lapply(plot_colors, function(x) {
-        if(stringr::str_starts(plot_colors, "#", negate = TRUE) && (!x %in% colors()))
+        if(any(stringr::str_starts(plot_colors, "#", negate = TRUE)) && (!x %in% all_colors))
             logErr("Custom colors must be hex value or one of color names in `colors()`")
     })
     if(!muted) {
@@ -147,7 +147,7 @@ setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
                    else if (all(plot_colors %in% "current"))  VCFComparisonOption("color_dis")
                    else                                plot_colors
     lapply(plot_colors, function(x) {
-        if(stringr::str_starts(plot_colors, "#", negate = TRUE) && (!x %in% colors()))
+        if(any(stringr::str_starts(plot_colors, "#", negate = TRUE)) && (!x %in% all_colors))
             logErr("Custom colors must be hex value or one of color names in `colors()`", parentFrame = 3)
     })
     plot_colors <- grDevices::colorRampPalette(plot_colors)(n)
@@ -168,7 +168,6 @@ setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
 #' object
 #' @details This function must be used in another function
 #' @examples
-#' @noRd
 #' abc <- function(){
 #'     getParentFrame(1)
 #' }
@@ -179,6 +178,7 @@ setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
 #' abc()
 #' def()
 #' getParentFrame()
+#' @noRd
 getParentFrame <- function(parent_level = 1, char = TRUE) {
     if(parent_level < 1L) stop("parent_level must bigger than 1")
     call_stack <- sys.calls()

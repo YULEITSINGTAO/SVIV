@@ -65,7 +65,7 @@ provide at least 5 colors.}
 a \code{plotKaryotype} plot object, see \code{?plotKaryotype} for details
 }
 \description{
-Plot SVs by chromosome
+Plot SVs at chromosome level.
 }
 \details{
 You must install \code{karyoploteR} package to use this function. By default, this

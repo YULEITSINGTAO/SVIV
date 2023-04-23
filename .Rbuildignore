@@ -9,3 +9,5 @@
 ^.*\.Rproj$
 ^inst/depend$
 ^examples$
+^vcfR$
+^Example\.R$

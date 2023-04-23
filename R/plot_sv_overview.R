@@ -266,7 +266,7 @@ svOverviewPlot <- function(
             breaks = (ref$Abs_start + ref$Abs_end)/2,
             labels = ref$Chr,
             expand = c(0, 0),
-            limit = c(0, max(ref$Abs_end) * xend_expand)
+            limits = c(0, max(ref$Abs_end) * xend_expand)
         ) +
         scale_color_manual(
             name = if(show_BND) "" else "Type",

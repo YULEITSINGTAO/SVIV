@@ -4,15 +4,15 @@ Title: VCF Comparison
 Version: 0.1.0
 Authors@R: c(
     person(given = "Lei", family = "Yu", role = c("aut", "cre"), email = "lyu062@ucr.edu"),
-    person(given = "Le", family = "Zhang", role = c("aut"), email = "le.zhang001@email.ucr.edu"),
+    person(given = "Le", family = "Zhang", role = c("aut"), email = "lezhang100@gmail.com"),
     person(given = "Zhenyu", family = "Jia", role = c("aut"), email = "zhenyuj@ucr.edu"))
 Description: Dealing with VCF files from different callers in order to get more accurate structure variations and visualize the results.
-License: What license is it under?
+License: GPL (>= 3)
 Encoding: UTF-8
-LazyData: true
 Depends:
-    R (>= 4.2.0)
+    R (>= 4.2.0),
 Imports: 
+    readr,
     circlize,
     vcfR,
     ggplot2,
@@ -20,11 +20,22 @@ Imports:
     magrittr,
     spsUtil,
     readr,
-    stats
+    stats,
+    GenomicRanges,
+    crayon,
+    glue,
+    tidyr,
+    stringr,
+    tibble,
+    grDevices,
+    methods,
+    utils,
+    stats,
+    graphics
 RoxygenNote: 7.2.1
 BugReports: https://github.com/YULEITSINGTAO/VCFComparison/issues
 URL: https://github.com/YULEITSINGTAO/VCFComparison
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-Suggests: BiocStyle, knitr, rmarkdown, karyoploteR
+Suggests: BiocStyle, knitr, rmarkdown, karyoploteR, prettydoc

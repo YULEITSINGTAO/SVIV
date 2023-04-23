@@ -61,3 +61,5 @@ vignettes/*.pdf
 
 vigettes/VCFComparison.html
 
+# circlizeR
+vcfR
