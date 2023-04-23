@@ -1,4 +1,4 @@
-#### This is the function to read the VCF files of a cohort into R workspace ##
+#### This is the function to read the VCF files of a cohort into R workspace
 #' Read_VCFs
 #'
 #' @param sample_mapping_df

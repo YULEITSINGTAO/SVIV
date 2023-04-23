@@ -1,10 +1,10 @@
-#' Title
+#' Extract gene names from translocation events (merging translocation by genes)
 #'
 #' @param input_vcf_list vcf GRane list
 #' @param txdb gene database
 #'
 #' @return translocation gene list
-#' @export
+# @export
 #'
 #' @examples
 #' translocation_gene_list(vcf_list, txdb)

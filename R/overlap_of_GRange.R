@@ -4,7 +4,7 @@
 #' @param grl_2 GRange 2
 #'
 #' @return The overlap of gtl_1 and grl_2
-#' @export
+# @export
 #'
 #' @examples
 #' overlap_of_GRange(grl_1,grl_2)

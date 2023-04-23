@@ -3,7 +3,7 @@
 #' @param SV_fix
 #'
 #' @return circos plot
-#' @export
+# @export
 #'
 #' @examples
 #' vcf_circos(VCF_file)
