@@ -4,7 +4,7 @@
 #' @param tilewidth
 #'
 #' @return
-#' @export
+# @export
 #'
 #' @examples
 #' Genome_Windows("hg19", 500000)

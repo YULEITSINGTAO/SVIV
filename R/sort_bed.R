@@ -6,7 +6,7 @@
 #' @param input_trans_bed
 #'
 #' @return
-#' @export
+# @export
 #'
 #' @examples
 sort_trans_bed <- function(input_trans_bed){

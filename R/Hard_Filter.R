@@ -1,14 +1,23 @@
-
 #' Hard Filter the VCF
-#' Hard filter the raw vcf file based on the "PASS", "PRECISE" and "Both"
+#' @description Filter the VCFList by filter tag
 #'
-#' @param VCF_List
-#' @param Filter_Standard
-#'
-#' @return Filtered_VCF_List
+#' @param VCFlist list, the list of input vcf files.
+#' @param filterStandard character, choose from "PASS", "Precise", or "Both".
+#' @return Filtered VCF_List
 #' @export
 #'
 #' @examples
+#'
+#' ## Read the VCFlist example
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+
+
 Hard_Filter <- function(VCF_List, Filter_Standard){
 
     Chromosome <- paste0("chr", c(1:22, "X","Y"))

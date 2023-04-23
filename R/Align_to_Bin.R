@@ -5,7 +5,7 @@
 #' @param bin_reference
 #'
 #' @return
-#' @export
+# @export
 #'
 #' @examples
 #' Align_to_Bin(bed_file, bin_reference)

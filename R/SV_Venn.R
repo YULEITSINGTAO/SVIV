@@ -1,3 +1,12 @@
+#' Title
+#'
+#' @param gr_list
+#'
+#' @return
+#' @export
+#'
+# @examples
+
 SV_Venn <- function(gr_list){
   library(GenomicRanges)
   vector_source <- c(1:length(gr_list))

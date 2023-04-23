@@ -1,3 +1,15 @@
+#' Merge ranges from different callers
+#'
+#' @param Manta_list
+#' @param DELLY_list
+#' @param GRIDSS_list
+#' @param LUMPY_list
+#'
+#' @return
+# @export
+#'
+#' @examples
+#'
 merge_ranges_from_callers <- function(Manta_list, DELLY_list, GRIDSS_list, LUMPY_list){
   caller_overlap_grl <- list()
   for (i in 1:length(Manta_list)) {

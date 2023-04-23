@@ -7,7 +7,7 @@
 #' @param txdb gene database
 #'
 #' @return Annotated GRange
-#' @export
+# @export
 #'
 #' @examples
 #'
