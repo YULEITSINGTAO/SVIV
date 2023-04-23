@@ -3,7 +3,7 @@
 \name{setColorContinuous}
 \alias{setColorContinuous}
 \alias{setColorDiscrete}
-\title{VCFComparison package plot colors}
+\title{SVIV package plot colors}
 \usage{
 setColorContinuous(plot_colors = "current", muted = FALSE)
 
@@ -25,11 +25,11 @@ provided colors. See \link[grDevices:colorRamp]{grDevices::colorRampPalette} for
 }
 \value{
 nothing will be returned, by the plot color options will be set, use
-\code{VCFComparisonOption("color_cont")} and \code{VCFComparisonOption("color_dis")}
+\code{SVIVOption("color_cont")} and \code{SVIVOption("color_dis")}
 to check current values after using setting the colors.
 }
 \description{
-get VCFComparison package plots colors, or set custom colors for
+get SVIV package plots colors, or set custom colors for
 both continuous and discrete colors.
 }
 \details{

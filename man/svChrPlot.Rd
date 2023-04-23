@@ -15,7 +15,7 @@ svChrPlot(
   show_legend = TRUE,
   legend_x_mar = -0.1,
   alpha = 0.5,
-  plot_colors = VCFComparisonOption("color_dis"),
+  plot_colors = SVIVOption("color_dis"),
   title = "SV plot by chromosome"
 )
 }
@@ -56,7 +56,7 @@ this number.}
 \item{alpha}{numeric, what is SV event block transparency value, between 0-1}
 
 \item{plot_colors}{character vector, what plot colors to use. Default follows
-package \link{setColorDiscrete} setting, see \code{?VCFComparisonOption}. You need to
+package \link{setColorDiscrete} setting, see \code{?SVIVOption}. You need to
 provide at least 5 colors.}
 
 \item{title}{string, plot title}
@@ -75,7 +75,7 @@ package is not installed.
 # plot only when karyoploteR is installed
 if(!length(spsUtil::checkNameSpace("karyoploteR", quietly = TRUE))) {
     # read in simulated SV data
-    sv <- readr::read_csv(system.file(package = "VCFComparison","extdata", "Sim_SV.csv"))
+    sv <- readr::read_csv(system.file(package = "SVIV","extdata", "Sim_SV.csv"))
     # create a table with 3 patients and each with 2 samples
     # for each sample, we give them 20 random SV events
     sample_info <- tibble::tibble(

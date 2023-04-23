@@ -9,7 +9,7 @@
 #'
 #' @examples
 #' function(bed_df)
-#'
+#' @noRd
 Chop_df <- function(bed_df){
     chromosomes <- paste0("chr", c(1:22,"X","Y"))
     chop_df_list <- list()

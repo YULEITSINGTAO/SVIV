@@ -1,15 +1,16 @@
 #' SV type extraction
-#' This function is used to extract specific SV types from the SV list
-#' @param VCF_list
-#' @param SV_type
+#' @description This function is used to extract specific SV types from the SV list
+#' @param VCF_list xxx
+#' @param SV_type xxx
 #'
-#' @return
+#' @return what is the return
 #' @export
 #'
 #' @examples
-#' SV_type_List(SVF_list, SV_type)
-SV_type_List <- function(VCF_list, SV_type){
-    SV_type_list <- list()
+#' 1 + 1
+#' # SVtypeList(VCF_list, SV_type)
+SVtypeList <- function(VCF_list, SV_type){
+    SVtypeList <- list()
     for (Caller in names(VCF_list)) {
         if (SV_type == "DEL"){
             for (j in names(VCF_list[[Caller]])){
@@ -19,7 +20,7 @@ SV_type_List <- function(VCF_list, SV_type){
                 names(bed_Deletion_table) <- c("Chr", "Start", "End")
                 bed_Deletion_table$Start <- as.numeric(bed_Deletion_table$Start)
                 bed_Deletion_table$End <- as.numeric(bed_Deletion_table$End)
-                SV_type_list[[Caller]][[j]] <- union_bed_df(bed_Deletion_table)
+                SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Deletion_table)
                 }
             }else if (SV_type == "DUP") {
                 for (j in names(VCF_list[[Caller]])){
@@ -31,7 +32,7 @@ SV_type_List <- function(VCF_list, SV_type){
                 names(bed_Duplication_table) <- c("Chr", "Start", "End")
                 bed_Duplication_table$Start <- as.numeric(bed_Duplication_table$Start)
                 bed_Duplication_table$End <- as.numeric(bed_Duplication_table$End)
-                SV_type_list[[Caller]][[j]] <- union_bed_df(bed_Duplication_table)
+                SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Duplication_table)
                 ############################################################################
                 }
             }else if (SV_type == "INV"){
@@ -42,7 +43,7 @@ SV_type_List <- function(VCF_list, SV_type){
                     names(bed_Inversion_table) <- c("Chr", "Start", "End")
                     bed_Inversion_table$Start <- as.numeric(bed_Inversion_table$Start)
                     bed_Inversion_table$End <- as.numeric(bed_Inversion_table$End)
-                    SV_type_list[[Caller]][[j]] <- union_bed_df(bed_Inversion_table)
+                    SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Inversion_table)
                 }
 
             }else if (SV_type == "INS"){
@@ -54,7 +55,7 @@ SV_type_List <- function(VCF_list, SV_type){
                     names(bed_Insertion_table) <- c("Chr", "Start", "End")
                     bed_Insertion_table$Start <- as.numeric(bed_Insertion_table$Start)
                     bed_Insertion_table$End <- as.numeric(bed_Insertion_table$End)
-                    SV_type_list[[Caller]][[j]] <- union_bed_df(bed_Insertion_table)
+                    SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Insertion_table)
                 }
 
             }else if (SV_type == "TRANS"){
@@ -69,13 +70,13 @@ SV_type_List <- function(VCF_list, SV_type){
                     chr_end[,2] <- as.numeric(chr_end[,2])
                     Translocation_bed <- cbind(chr_start, chr_end)
                     colnames(Translocation_bed) <- c("Chr1", "Pos1", "Chr2","Pos2")
-                    SV_type_list[[Caller]][[j]] <- Translocation_bed %>% filter(grepl("chr[0-9|X|Y]{1,}$", Chr1) & grepl("chr[0-9|X|Y]{1,}$", Chr2))
+                    SVtypeList[[Caller]][[j]] <- Translocation_bed %>% filter(grepl("chr[0-9|X|Y]{1,}$", Chr1) & grepl("chr[0-9|X|Y]{1,}$", Chr2))
                     }
                 } else{
                     print("Please input the required SV_type: One of DEL, DUP, INS, INV, TRANS")
                 }
         }
-    return(SV_type_list)
+    return(SVtypeList)
     }
 
 

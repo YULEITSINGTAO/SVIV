@@ -19,7 +19,7 @@ svOverviewPlot(
   plot_margin = c(0, 0, 0, 0.5),
   group_hjust = -5,
   group_vjust = -0.5,
-  color_palette = VCFComparisonOption("color_dis")
+  color_palette = SVIVOption("color_dis")
 )
 }
 \arguments{
@@ -91,7 +91,7 @@ Plot SVs across all chromosomes and across all samples on a big segment plot
 \examples{
 
 # read in simulated SV data
-sv <- readr::read_csv(system.file(package = "VCFComparison","extdata", "Sim_SV.csv"))
+sv <- readr::read_csv(system.file(package = "SVIV","extdata", "Sim_SV.csv"))
 # create a table with 3 patients and each with 2 samples
 # for each sample, we give them 20 random SV events
 sample_info <- tibble::tibble(

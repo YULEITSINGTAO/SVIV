@@ -27,7 +27,7 @@
 #' def()
 logInfo <- function(
     msg,
-    verbose = VCFComparisonOption("verbose"),
+    verbose = SVIVOption("verbose"),
     prefix="default",
     parentFrame = 2
     ){

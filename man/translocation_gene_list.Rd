@@ -2,7 +2,7 @@
 % Please edit documentation in R/translocation_gene_list.R
 \name{translocation_gene_list}
 \alias{translocation_gene_list}
-\title{Title}
+\title{Extract gene names from translocation events (merging translocation by genes)}
 \usage{
 translocation_gene_list(input_vcf_list, txdb)
 }
@@ -15,7 +15,7 @@ translocation_gene_list(input_vcf_list, txdb)
 translocation gene list
 }
 \description{
-Title
+Extract gene names from translocation events (merging translocation by genes)
 }
 \examples{
 translocation_gene_list(vcf_list, txdb)

@@ -10,15 +10,15 @@
 #' @examples
 #' hg38coord()
 hg38coord <- function(){
-    hg38 <- readr::read_tsv(system.file(package = "VCFComparison", "extdata", "hg38.bed"),
+    hg38 <- readr::read_tsv(system.file(package = "SVIV", "extdata", "hg38.bed"),
                             col_names = FALSE, show_col_types = FALSE, progress = FALSE)
     names(hg38) <- c("Chr", "Start", "End", "Abs_start", "Abs_end")
-    structure(hg38, class = c("VCFComparison_hg38coord", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
+    structure(hg38, class = c("SVIV_hg38coord", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 }
 
 
 #' @exportS3Method base::print
-print.VCFComparison_hg38coord <- function(x, ...) {
+print.SVIV_hg38coord <- function(x, ...) {
     cat(
         "Returning human hg38 genome coordinates\n",
         tblue("Chr:"), "Chromosome numbers, 1-22, X, Y\n",
@@ -37,14 +37,14 @@ print.VCFComparison_hg38coord <- function(x, ...) {
 #' @examples
 #' hg38special()
 hg38special <- function(){
-    hg38_special <- readr::read_tsv(system.file(package = "VCFComparison","extdata", "hg38_specail_regions.bed"),
+    hg38_special <- readr::read_tsv(system.file(package = "SVIV","extdata", "hg38_specail_regions.bed"),
                                     col_names = FALSE, show_col_types = FALSE, progress = FALSE)
     names(hg38_special) <- c("Chr", "Start", "End", "Region")
-    structure(hg38_special, class = c("VCFComparison_hg38special", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
+    structure(hg38_special, class = c("SVIV_hg38special", "spec_tbl_df", "tbl_df", "tbl", "data.frame"))
 }
 
 #' @exportS3Method base::print
-print.VCFComparison_hg38special <- function(x, ...) {
+print.SVIV_hg38special <- function(x, ...) {
     cat(
         "Returning human hg38 genome special regions' coordinates\n",
         tblue("Chr:"), "Chromosome numbers, 1-22, X, Y\n",
@@ -56,7 +56,7 @@ print.VCFComparison_hg38special <- function(x, ...) {
     x
 }
 
-#' Get or set options for VCFComparison package
+#' Get or set options for SVIV package
 #' @param option string, what option to get or set
 #' @param value any R object, the value you want to set for the option.
 #' @details If value is not provided, get the current value of this option, if
@@ -69,13 +69,13 @@ print.VCFComparison_hg38special <- function(x, ...) {
 #' @export
 #'
 #' @examples
-#' VCFComparisonOption("verbose") # get current value
-#' VCFComparisonOption("verbose", TRUE) # set it to a new value
-#' VCFComparisonOption("verbose") # check the value again
-VCFComparisonOption <- function(option = NULL, value = NULL) {
+#' SVIVOption("verbose") # get current value
+#' SVIVOption("verbose", TRUE) # set it to a new value
+#' SVIVOption("verbose") # check the value again
+SVIVOption <- function(option = NULL, value = NULL) {
     if(is.null(option)) {
         cat(
-            tyellow("Possible VCFComparison package options are:\n"),
+            tyellow("Possible SVIV package options are:\n"),
             tblue("verbose:    bool, verbosity level, default `FALSE`\n"),
             tblue("color_cont: string, continuous color gradient for plots, use `setColorContinuous` to set\n"),
             tblue("color_dis : string, discrete color palette for plots, use `setColorDiscrete` to set\n")
@@ -83,15 +83,15 @@ VCFComparisonOption <- function(option = NULL, value = NULL) {
         return(invisible())
     }
     stopifnot(is.character(option) && length(option) == 1)
-    option <- glue("VCFComparison.{option}")
+    option <- glue("SVIV.{option}")
     if(is.null(value)) return(getOption(option, FALSE))
     do.call(options, stats::setNames(list(value), option))
 }
 
 
 
-#' VCFComparison package plot colors
-#' @description get VCFComparison package plots colors, or set custom colors for
+#' SVIV package plot colors
+#' @description get SVIV package plots colors, or set custom colors for
 #' both continuous and discrete colors.
 #' @details [setColorContinuous] will set color palettes for continuous plot gradients,
 #' [setColorDiscrete] set the colors to use for discrete color palettes.
@@ -106,7 +106,7 @@ VCFComparisonOption <- function(option = NULL, value = NULL) {
 #' @param n integer, for [setColorDiscrete] only, how many unique colors to create based on
 #' provided colors. See [grDevices::colorRampPalette] for details.
 #' @return nothing will be returned, by the plot color options will be set, use
-#' `VCFComparisonOption("color_cont")` and `VCFComparisonOption("color_dis")`
+#' `SVIVOption("color_cont")` and `SVIVOption("color_dis")`
 #' to check current values after using setting the colors.
 #' @param muted bool, muted the print message on console?
 #' @export
@@ -119,7 +119,7 @@ setColorContinuous <- function(plot_colors = "current", muted = FALSE) {
     stopifnot(is.logical(muted) && length(muted) == 1)
     plasma <- c("#F0F921FF", "#CC4678FF", "#0D0887FF")
     plot_colors <- if(all(plot_colors %in% "default")) plasma
-                   else if (all(plot_colors %in% "current"))  VCFComparisonOption("color_cont")
+                   else if (all(plot_colors %in% "current"))  SVIVOption("color_cont")
                    else                                plot_colors
     lapply(plot_colors, function(x) {
         if(any(stringr::str_starts(plot_colors, "#", negate = TRUE)) && (!x %in% all_colors))
@@ -129,7 +129,7 @@ setColorContinuous <- function(plot_colors = "current", muted = FALSE) {
         unlist(lapply(grDevices::colorRampPalette(plot_colors)(getOption("width", 80)), function(x) crayon::make_style(x)("|"))) %>%
             cat(tblue("Continuous colors:\n"),., "\n", sep = "")
     }
-    VCFComparisonOption("color_cont", plot_colors)
+    SVIVOption("color_cont", plot_colors)
     invisible(plot_colors)
 }
 
@@ -144,7 +144,7 @@ setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
     #           "#CCEBC5", "#FFED6F")
     set2 <- c("#66C2A5", "#FC8D62", "#8DA0CB", "#E78AC3", "#A6D854", "#FFD92F", "#E5C494", "#B3B3B3")
     plot_colors <- if(all(plot_colors %in% "default")) set2
-                   else if (all(plot_colors %in% "current"))  VCFComparisonOption("color_dis")
+                   else if (all(plot_colors %in% "current"))  SVIVOption("color_dis")
                    else                                plot_colors
     lapply(plot_colors, function(x) {
         if(any(stringr::str_starts(plot_colors, "#", negate = TRUE)) && (!x %in% all_colors))
@@ -155,7 +155,7 @@ setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
         unlist(lapply(plot_colors, function(x) crayon::make_style(x)(x))) %>%
             cat(tblue("Discrete colors:\n"),., "\n")
     }
-    VCFComparisonOption("color_dis", plot_colors)
+    SVIVOption("color_dis", plot_colors)
     invisible(plot_colors)
 }
 ############### not exported internal utility functions

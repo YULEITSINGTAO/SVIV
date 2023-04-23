@@ -1,6 +1,6 @@
 # global vars fix for dplyr
 
-globalVariables(c(
+utils::globalVariables(c(
     ":=", "!!", ".",
     "Chr", "Start", "End", "Bnd_end", "Bnd_end_2",
     "Bnd_end_1", "Abs_end", "Abs_start",

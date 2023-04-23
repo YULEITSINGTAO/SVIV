@@ -1,13 +1,13 @@
 #' Intersection of intervals
-#'
-#' @param bed_df
-#' @param verbose
-#'
-#' @return
+#' @description
+#' @param bed_df_1 xxx
+#' @param bed_df_2 xxx
+#' @param verbose bool, print verbose information?
+#' @return xxx
 #' @export
-#'
 #' @examples
-intersection_bed_df <- function(bed_df_1, bed_df_2, verbose = FALSE){
+#' 1+1
+intersectionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
     intersection_df_list <- list()
     chromosomes <- paste0("chr", c(1:22,"X","Y"))
     for (chr in chromosomes) {
@@ -50,12 +50,14 @@ intersection_bed_list <- function(bed_list_1, bed_list_2, verbose = FALSE){
     bed_list <- list()
 
     for (i in names(bed_list_1)){
-        bed_list[[i]] <- intersection_bed_df(bed_list_1[[i]], bed_list_2[[i]])
+        bed_list[[i]] <- intersectionBedDf(bed_list_1[[i]], bed_list_2[[i]])
 
     }
     return(bed_list)
 }
 
+#' @rdname intersectionBedDf
+#' @export
 '%I%' <- function(bed_list_1, bed_list_2){
     intersection_bed_list(bed_list_1, bed_list_2)
 }

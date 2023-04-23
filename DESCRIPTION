@@ -1,4 +1,4 @@
-Package: VCFComparison
+Package: SVIV
 Type: Package
 Title: VCF Comparison
 Version: 0.1.0
@@ -12,7 +12,6 @@ Encoding: UTF-8
 Depends:
     R (>= 4.2.0),
 Imports: 
-    readr,
     circlize,
     vcfR,
     ggplot2,
@@ -30,11 +29,10 @@ Imports:
     grDevices,
     methods,
     utils,
-    stats,
     graphics
 RoxygenNote: 7.2.1
-BugReports: https://github.com/YULEITSINGTAO/VCFComparison/issues
-URL: https://github.com/YULEITSINGTAO/VCFComparison
+BugReports: https://github.com/YULEITSINGTAO/SVIV/issues
+URL: https://github.com/YULEITSINGTAO/SVIV
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

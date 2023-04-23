@@ -1,16 +1,18 @@
-#' Align_to_Bin
-#' This function can count the range SVs in given ranges. The given ranges can be bins.
+#' AlignToBin
+#' @description This function can count the range SVs in given ranges. The given ranges can be bins.
 #' Bins can be equally divided, or the result form chopped dataframe.
 #' @param bed_file
 #' @param bin_reference
 #'
-#' @return
+#' @return xxx
 # @export
 #'
 #' @examples
-#' Align_to_Bin(bed_file, bin_reference)
+#' 1 + 1
+# # Align_to_Bin(bed_file, bin_reference)
 #'
-Align_to_Bin <- function(bed_file, bin_reference){
+#'@noRd
+AlignToBin <- function(bed_file, bin_reference){
 
     B <- bin_reference
 

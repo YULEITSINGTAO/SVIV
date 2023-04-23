@@ -1,17 +1,15 @@
 #' Union of intervals
 #'
-#' @param bed_df
-#' @param verbose
+#' @param bed_df_1 xxx
+#' @param bed_df_2 xxx
+#' @param verbose bool, to display verbose information?
 #'
-#' @return
+#' @return xxx
 #' @export
 #'
 #' @examples
-#'
-#'
-#'
-#'
-union_bed_df <- function(bed_df_1, bed_df_2, verbose = FALSE){
+#' 1 + 1
+unionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
     union_df_list <- list()
     chromosomes <- paste0("chr", c(1:22,"X","Y"))
     for (chr in chromosomes) {
@@ -43,12 +41,14 @@ union_bed_list <- function(bed_list_1, bed_list_2, verbose = FALSE){
     bed_list <- list()
 
     for (i in names(bed_list_1)){
-        bed_list[[i]] <- union_bed_df(bed_list_1[[i]], bed_list_2[[i]])
+        bed_list[[i]] <- unionBedDf(bed_list_1[[i]], bed_list_2[[i]])
 
     }
     return(bed_list)
 }
 
+#' @rdname unionBedDf
+#' @export
 '%U%' <- function(bed_list_1, bed_list_2){
     union_bed_list(bed_list_1, bed_list_2)
 }

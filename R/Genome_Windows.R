@@ -7,12 +7,13 @@
 # @export
 #'
 #' @examples
-#' Genome_Windows("hg19", 500000)
+#' GenomeWindows("hg19", 500000)
 #'
-Genome_Windows <- function(reference = "hg19", tilewidth = 500000){
+#' @noRd
+GenomeWindows <- function(reference = "hg19", tilewidth = 500000){
 
     if (reference == "hg19"){
-        chrSizes <- readRDS(system.file(package = "VCFComparison", "extdata", "chr_length.rds"))
+        chrSizes <- readRDS(system.file(package = "SVIV", "extdata", "chr_length.rds"))
 
     } else if (reference == "hg38"){
         chrSizes <- hg38coord()
