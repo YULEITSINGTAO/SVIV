@@ -22,7 +22,10 @@ projectTranslocation <- function(translocation_bed){
     translocation_bed$Chr_1 <- factor(translocation_bed$Chr_1, levels = paste0("chr", c(1:22, "X", "Y")))
     translocation_bed$Chr_2 <- factor(translocation_bed$Chr_2, levels = paste0("chr", c(1:22, "X", "Y")))
 
-    p <- ggplot2::ggplot(translocation_bed, aes(Pos_1, Pos_2)) + geom_point() + facet_grid(vars(Chr_1), vars(Chr_2))
+    p <- ggplot2::ggplot(translocation_bed, aes(Pos_1, Pos_2)) + geom_point() + facet_grid(vars(Chr_1), vars(Chr_2)) +
+        scale_x_continuous(labels  = scales::label_number(scale = 1e-6, suffix = "Mbp", accuracy = 1)) +
+        scale_y_continuous(labels  = scales::label_number(scale = 1e-6, suffix = "Mbp", accuracy = 1)) + xlab("Break point 1") + ylab("Break point 2") # for the y axis label
+
 
     return(p)
 }
