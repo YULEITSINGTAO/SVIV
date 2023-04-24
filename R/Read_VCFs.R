@@ -1,15 +1,23 @@
 #### This is the function to read the VCF files of a cohort into R workspace
-#' Read_VCFs
+#' readVCFs
 #'
-#' @param sample_mapping_df
+#' @param sample_mapping_df dataframe, the input sample map indicate the caller,
+#' sample and directory.
+#' Columns:
+#' - Sample: Sample's name.
+#' - Caller: Caller's name.
+#' - Directory: directory to the VCF file.
 #'
-#' @return VCF_list
+#' @return VCFList
 #' @export
 #'
 #' @examples
+#'\dontrun{
+#'Read_VCFs(sample_mapping_df)
+#'}
 #'
-#' Read_VCFs(sample_mapping_df)
-Read_VCFs <- function(sample_mapping_df){
+#'
+readVCFs <- function(sample_mapping_df){
 
     ## check the if all files exist in the sample map
     print("Checking if all files exist")

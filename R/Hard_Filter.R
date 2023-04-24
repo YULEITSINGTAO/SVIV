@@ -6,8 +6,10 @@
 #' @export
 #'
 #' @examples
-#' 1 + 1
-#' ## Read the VCFlist example
+#'\dontrun{
+#'Read_VCFs(sample_mapping_df)
+#'}
+#'
 hardFilter <- function(VCF_list, filter_standard){
 
     Chromosome <- paste0("chr", c(1:22, "X","Y"))

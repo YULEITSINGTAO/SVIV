@@ -1,12 +1,25 @@
-#' Intersection of intervals
-#' @description
-#' @param bed_df_1 xxx
-#' @param bed_df_2 xxx
+#' Intersection of bed intervals
+#' @description Get the intersection of two bed dataframes.
+#' @param bed_df_1 dataframe, bed format dataframe noting one type of the interval mutation.
+#' Columns:
+#' - Chr:  string, chromosome numbers example: chr1, chr2, etc
+#' - Start:  numeric integers, SV starting position
+#' - End:    numeric integers, SV ending p1osition
+#'
+#' @param bed_df_2 dataframe, bed format dataframe noting one type of the interval mutation.
+#' Columns:
+#' - Chr:  string, chromosome numbers example: chr1, chr2, etc
+#' - Start:  numeric integers, SV starting position
+#' - End:    numeric integers, SV ending p1osition
+#'
 #' @param verbose bool, print verbose information?
-#' @return xxx
+#' @return bed_df
 #' @export
 #' @examples
-#' 1+1
+#' bed_df_1 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+#' bed_df_2 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+#' intersect_df <- intersectionBedDf(bed_df_1, bed_df_2, verbose = FALSE)
+#'
 intersectionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
     intersection_df_list <- list()
     chromosomes <- paste0("chr", c(1:22,"X","Y"))
@@ -45,6 +58,22 @@ intersectionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
 
 }
 
+#' Intersection of bed intervals list
+#' @description
+#' @param bed_list_1 dataframe, bed format dataframe noting one type of the interval mutation
+#' @param bed_list_2 dataframe, bed format dataframe noting one type of the interval mutation
+#' @param verbose bool, print verbose information?
+#' @return bed_df
+#' @export
+#' @examples
+#'
+#' bed_df_1 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+#' bed_df_2 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+#' bed_list_1 <- list(bed_df_1, bed_df_2)
+#' bed_list_2 <- list(bed_df_2, bed_df_1)
+#'
+#' intersect_df <- intersectionBedDf(bed_list_1, bed_list_2, verbose = FALSE)
+#'
 intersection_bed_list <- function(bed_list_1, bed_list_2, verbose = FALSE){
 
     bed_list <- list()
