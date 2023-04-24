@@ -1,14 +1,14 @@
-#' SV type extraction
+#' SVtypeList
 #' @description This function is used to extract specific SV types from the SV list
-#' @param VCF_list xxx
-#' @param SV_type xxx
-#'
-#' @return what is the return
+#' @param VCF_list list, the list of VCF files
+#' @param SV_type characters, one from DEL, DUP, INV, INS, and TRANS
+#' @return SVtypeList
 #' @export
 #'
 #' @examples
-#' 1 + 1
-#' # SVtypeList(VCF_list, SV_type)
+#'\dontrun{
+#'SVtypeList(VCF_list, SV_type)
+#'}
 SVtypeList <- function(VCF_list, SV_type){
     SVtypeList <- list()
     for (Caller in names(VCF_list)) {
