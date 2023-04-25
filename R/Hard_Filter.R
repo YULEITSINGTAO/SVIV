@@ -1,6 +1,6 @@
 #' Hard Filter the VCF
 #' @description Filter the VCF list by filter tag
-#' @param VCFlist VCF_list, the list of input vcf files.
+#' @param VCF_list VCF_list, the list of input vcf files.
 #' @param filter_standard character, choose from "PASS", "Precise", or "Both".
 #' @return Filtered VCF_list
 #' @export

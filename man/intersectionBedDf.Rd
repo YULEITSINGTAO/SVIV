@@ -3,25 +3,40 @@
 \name{intersectionBedDf}
 \alias{intersectionBedDf}
 \alias{\%I\%}
-\title{Intersection of intervals}
+\title{Intersection of bed intervals}
 \usage{
 intersectionBedDf(bed_df_1, bed_df_2, verbose = FALSE)
 
 bed_list_1 \%I\% bed_list_2
 }
 \arguments{
-\item{bed_df_1}{xxx}
+\item{bed_df_1}{dataframe, bed format dataframe noting one type of the interval mutation.
+Columns:
+\itemize{
+\item Chr:  string, chromosome numbers example: chr1, chr2, etc
+\item Start:  numeric integers, SV starting position
+\item End:    numeric integers, SV ending p1osition
+}}
 
-\item{bed_df_2}{xxx}
+\item{bed_df_2}{dataframe, bed format dataframe noting one type of the interval mutation.
+Columns:
+\itemize{
+\item Chr:  string, chromosome numbers example: chr1, chr2, etc
+\item Start:  numeric integers, SV starting position
+\item End:    numeric integers, SV ending p1osition
+}}
 
 \item{verbose}{bool, print verbose information?}
 }
 \value{
-xxx
+bed_df
 }
 \description{
-Intersection of intervals
+Get the intersection of two bed dataframes.
 }
 \examples{
-1+1
+bed_df_1 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+bed_df_2 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+intersectionBedDf(bed_df_1, bed_df_2, verbose = FALSE)
+
 }

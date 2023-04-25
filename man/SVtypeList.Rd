@@ -2,22 +2,23 @@
 % Please edit documentation in R/SV_type_List.R
 \name{SVtypeList}
 \alias{SVtypeList}
-\title{SV type extraction}
+\title{SVtypeList}
 \usage{
 SVtypeList(VCF_list, SV_type)
 }
 \arguments{
-\item{VCF_list}{xxx}
+\item{VCF_list}{list, the list of VCF files}
 
-\item{SV_type}{xxx}
+\item{SV_type}{characters, one from DEL, DUP, INV, INS, and TRANS}
 }
 \value{
-what is the return
+SVtypeList
 }
 \description{
 This function is used to extract specific SV types from the SV list
 }
 \examples{
-1 + 1
-# SVtypeList(VCF_list, SV_type)
+\dontrun{
+SVtypeList(VCF_list, SV_type)
+}
 }

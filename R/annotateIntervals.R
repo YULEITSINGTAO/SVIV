@@ -12,7 +12,7 @@
 #' @examples
 #'
 #' annotateIntervals(GRange, hg19_txdb)
-#'
+#' @noRd
 annotateIntervals <- function(intervals, txdb){
 
   stopifnot(is(intervals, "GRanges"), is(txdb, "TxDb"))

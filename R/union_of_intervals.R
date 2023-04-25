@@ -18,9 +18,9 @@
 #' @export
 #'
 #' @examples
-#' bed_df_1 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
-#' bed_df_2 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
-#' union_df <- unionBedDf(bed_df_1, bed_df_2, verbose = FALSE)
+#' bed_df_1 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+#' bed_df_2 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+#' unionBedDf(bed_df_1, bed_df_2, verbose = FALSE)
 #'
 unionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
     union_df_list <- list()
@@ -58,12 +58,12 @@ unionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
 #' @export
 #' @examples
 #'
-#' bed_df_1 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
-#' bed_df_2 <- dataframe(Chr = c(paste(chr, c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+#' bed_df_1 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+#' bed_df_2 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
 #' bed_list_1 <- list(bed_df_1, bed_df_2)
 #' bed_list_2 <- list(bed_df_2, bed_df_1)
 #'
-#' intersect_df <- unionBedList(bed_list_1, bed_list_2, verbose = FALSE)
+#' unionBedList(bed_list_1, bed_list_2, verbose = FALSE)
 #'
 unionBedList <- function(bed_list_1, bed_list_2, verbose = FALSE){
 

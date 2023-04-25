@@ -29,8 +29,12 @@ Imports:
     grDevices,
     methods,
     utils,
-    graphics
-RoxygenNote: 7.2.1
+    graphics,
+    factoextra,
+    cluster,
+    ggpubr,
+    gridExtra
+RoxygenNote: 7.2.3
 BugReports: https://github.com/YULEITSINGTAO/SVIV/issues
 URL: https://github.com/YULEITSINGTAO/SVIV
 Roxygen: list(markdown = TRUE)

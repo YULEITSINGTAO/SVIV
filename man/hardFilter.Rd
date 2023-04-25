@@ -18,6 +18,8 @@ Filtered VCF_list
 Filter the VCF list by filter tag
 }
 \examples{
-1 + 1
-## Read the VCFlist example
+\dontrun{
+Read_VCFs(sample_mapping_df)
+}
+
 }

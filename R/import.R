@@ -20,7 +20,7 @@ utils::globalVariables(c(
 #' @importFrom spsUtil msg isFalsy notFalsy
 #' @importFrom glue glue
 #' @importFrom readr read_csv
-#' @importFrom  stats setNames
+#' @importFrom  stats setNames kmeans
 #' @importFrom  tidyr unnest_wider
 #' @importFrom  grDevices colorRampPalette
 #' @importFrom  crayon make_style
@@ -32,6 +32,10 @@ utils::globalVariables(c(
 #' @importFrom stats na.omit
 #' @importFrom graphics legend
 #' @importFrom stringr str_extract str_split_fixed
+#' @importFrom cluster clusGap maxSE
+#' @importFrom factoextra fviz_gap_stat get_dist fviz_cluster
+#' @importFrom ggpubr ggarrange
+#'
 NULL
 
 # so strange that colors() is not exported from grDevices on check,
