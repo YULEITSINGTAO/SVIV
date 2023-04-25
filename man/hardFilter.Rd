@@ -7,9 +7,9 @@
 hardFilter(VCF_list, filter_standard)
 }
 \arguments{
-\item{filter_standard}{character, choose from "PASS", "Precise", or "Both".}
+\item{VCF_list}{VCF_list, the list of input vcf files.}
 
-\item{VCFlist}{VCF_list, the list of input vcf files.}
+\item{filter_standard}{character, choose from "PASS", "Precise", or "Both".}
 }
 \value{
 Filtered VCF_list

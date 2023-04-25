@@ -14,7 +14,8 @@ utils::globalVariables(c(
 #' @importFrom ggplot2 ggplot geom_segment aes geom_abline ylab xlab coord_flip
 #' @importFrom ggplot2 theme_minimal theme element_text element_blank scale_y_continuous
 #' @importFrom ggplot2 scale_x_discrete geom_vline ggtitle geom_point scale_color_manual
-#' @importFrom ggplot2 scale_color_manual guide_legend margin scale_shape_manual
+#' @importFrom ggplot2 scale_color_manual guide_legend margin scale_shape_manual facet_grid
+#' @importFrom ggplot2 vars scale_x_continuous scale_y_continuous
 #' @importFrom magrittr %>%
 #' @importFrom dplyr filter mutate pull count select distinct
 #' @importFrom spsUtil msg isFalsy notFalsy
@@ -35,6 +36,7 @@ utils::globalVariables(c(
 #' @importFrom cluster clusGap maxSE
 #' @importFrom factoextra fviz_gap_stat get_dist fviz_cluster
 #' @importFrom ggpubr ggarrange
+#' @importFrom gridExtra grid.arrange
 #'
 NULL
 

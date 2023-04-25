@@ -29,20 +29,22 @@ clustered result
 Project translocation to Cartesian coordinate system and clustering
 }
 \examples{
+\dontrun{
 translocation_bed_1 <- data.frame(Chr_1 = paste0("chr", c(7, 8, 9, 9, 13, 15)),
 Pos_1 = c(8663000, 70602500, 131457200, 33130600, 21746650, 42750778),
 Chr_2 = paste0("chr", c(5, 1, 2, 6, 11, 2)),
 Pos_2 = c(37709720, 91853200, 116376668, 43655549, 108585748, 214996194))
 translocation_bed_2 <- data.frame(Chr_1 = paste0("chr", c(7, 8, 9, 9, 13, 15)),
-                                 Pos_1 = c(8663000, 70602500, 131457200, 33130600, 21746650, 42750778)/100,
-                                 Chr_2 = paste0("chr", c(5, 1, 2, 6, 11, 2)),
-                                 Pos_2 = c(37709720, 91853200, 116376668, 43655549, 108585748, 214996194)/100)
+                                  Pos_1 = c(8663000, 70602500, 131457200, 33130600, 21746650, 42750778)/100,
+                                  Chr_2 = paste0("chr", c(5, 1, 2, 6, 11, 2)),
+                                  Pos_2 = c(37709720, 91853200, 116376668, 43655549, 108585748, 214996194)/100)
 
 translocation_bed_1_2 <- rbind(translocation_bed_1, translocation_bed_2)
 translocation_bed <- data.frame()
 for(i in 1:10){
-   translocation_bed_new <- translocation_bed_1_2 \%>\% dplyr::mutate(Pos_1 = Pos_1 + 10000*sample.int(1000, 12)) \%>\% dplyr::mutate(Pos_2 = Pos_2 + 10000*sample.int(1000, 12))
+   translocation_bed_new <- translocation_bed_1_2 \%>\% dplyr::mutate(Pos_1 = Pos_1 + sample.int(1000, 12)) \%>\% dplyr::mutate(Pos_2 = Pos_2 + sample.int(1000, 12))
    translocation_bed <- rbind(translocation_bed, translocation_bed_new)
 }
-
+projectTranslocationClustering(translocation_bed)
+}
 }
