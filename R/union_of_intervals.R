@@ -18,8 +18,8 @@
 #' @export
 #'
 #' @examples
-#' bed_df_1 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
-#' bed_df_2 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+#' bed_df_1 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+#' bed_df_2 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
 #' unionBedDf(bed_df_1, bed_df_2, verbose = FALSE)
 #'
 unionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
@@ -46,7 +46,6 @@ unionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
     union_df <- na.omit(do.call(rbind, union_df_list))
     rownames(union_df) <- NULL
     return(union_df)
-
 }
 
 #' Union of bed intervals list
@@ -58,8 +57,8 @@ unionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
 #' @export
 #' @examples
 #'
-#' bed_df_1 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
-#' bed_df_2 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+#' bed_df_1 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+#' bed_df_2 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
 #' bed_list_1 <- list(bed_df_1, bed_df_2)
 #' bed_list_2 <- list(bed_df_2, bed_df_1)
 #'
@@ -78,6 +77,7 @@ unionBedList <- function(bed_list_1, bed_list_2, verbose = FALSE){
 
 #' @rdname unionBedDf
 #' @export
+#'
 '%U%' <- function(bed_list_1, bed_list_2){
-    union_bed_list(bed_list_1, bed_list_2)
+    unionBedList(bed_list_1, bed_list_2)
 }

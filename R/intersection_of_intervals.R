@@ -69,8 +69,8 @@ intersectionBedDf <- function(bed_df_1, bed_df_2, verbose = FALSE){
 #'
 #' bed_df_1 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
 #' bed_df_2 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
-#' bed_list_1 <- list(bed_df_1, bed_df_2)
-#' bed_list_2 <- list(bed_df_2, bed_df_1)
+#' bed_list_1 <- list("sample1" = bed_df_1, "sample2" = bed_df_2)
+#' bed_list_2 <- list("sample1" = bed_df_2, "sample2" = bed_df_1)
 #'
 #' intersectionBedList(bed_list_1, bed_list_2, verbose = FALSE)
 #'
@@ -88,5 +88,5 @@ intersectionBedList <- function(bed_list_1, bed_list_2, verbose = FALSE){
 #' @rdname intersectionBedDf
 #' @export
 '%I%' <- function(bed_list_1, bed_list_2){
-    intersection_bed_list(bed_list_1, bed_list_2)
+    intersectionBedList(bed_list_1, bed_list_2)
 }
