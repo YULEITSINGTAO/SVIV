@@ -54,7 +54,7 @@ projectTranslocation <- function(translocation_bed){
 #' sortTranslocationBed(translocation_bed)
 #'
 
-sortTranslocationBed <- function(input_trans_bed){
+sortTranslocationBed <- function(translocation_bed){
     ## convert the class of columns
     translocation_bed$Event <- paste0("event_", c(1:nrow(translocation_bed)))
     translocation_bed$Chr_1 <- factor(translocation_bed$Chr_1, levels = paste0("chr", c(1:22, "X", "Y")))
@@ -109,7 +109,7 @@ clusterOnePairofChromosomes <- function(translocation_bed){
 
     sorted_translocation_bed <- sortTranslocationBed(translocation_bed)
     ## Check if the input bed dataframe has only one pair of chromosomes
-    stopifnot(nrow(unique(translocation_bed_example %>% select(Chr_1, Chr_2)))==1)
+    stopifnot(nrow(unique(sorted_translocation_bed %>% select(Chr_1, Chr_2))) == 1)
 
     pos_df <- translocation_bed %>% dplyr::select(Pos_1, Pos_2)
     scaled_data <- as.matrix(scale(pos_df))
@@ -175,10 +175,9 @@ clusterOnePairofChromosomes <- function(translocation_bed){
 #'    translocation_bed_new <- translocation_bed_1_2 %>% dplyr::mutate(Pos_1 = Pos_1 + sample.int(1000, 12)) %>% dplyr::mutate(Pos_2 = Pos_2 + sample.int(1000, 12))
 #'    translocation_bed <- rbind(translocation_bed, translocation_bed_new)
 #'}
+#'
 #'projectTranslocationClustering(translocation_bed)
-#'}
-
-
+#'
 projectTranslocationClustering <- function(translocation_bed, method = "K-Means", least_translocation_number_of_clustering = 10){
     sorted_translocation_bed <- sortTranslocationBed(translocation_bed)
 
@@ -193,7 +192,8 @@ projectTranslocationClustering <- function(translocation_bed, method = "K-Means"
     out_figure_list <- list()
 
     for (i in 1:nrow(selected_chr_1_chr_2_pair)) {
-        cluster_one_pair_of_chromosomes_out <- clusterOnePairofChromosomes(sorted_translocation_bed %>% dplyr::filter(Chr_1 == selected_chr_1_chr_2_pair[i,1], Chr_2 == selected_chr_1_chr_2_pair[i,2]))
+        input_one_pair_chromosome <- sorted_translocation_bed %>% dplyr::filter(Chr_1 == selected_chr_1_chr_2_pair[i,1], Chr_2 == selected_chr_1_chr_2_pair[i,2])
+        cluster_one_pair_of_chromosomes_out <- clusterOnePairofChromosomes(input_one_pair_chromosome)
         out_table_list[[i]] <- cluster_one_pair_of_chromosomes_out[["out_clustered_means"]]
         out_figure_list[[i]] <- cluster_one_pair_of_chromosomes_out[["out_figures"]]
 
@@ -207,10 +207,4 @@ projectTranslocationClustering <- function(translocation_bed, method = "K-Means"
 
     result_list <- list("merged_trans_table" = one_table, "clustering_plot" = one_figure)
     return(result_list)
-
-
 }
-
-
-
-
