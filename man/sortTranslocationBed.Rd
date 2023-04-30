@@ -4,7 +4,7 @@
 \alias{sortTranslocationBed}
 \title{sortTranslocationBed}
 \usage{
-sortTranslocationBed(input_trans_bed)
+sortTranslocationBed(translocation_bed)
 }
 \arguments{
 \item{translocation_bed}{dataframe, paired translocation bed dataframe

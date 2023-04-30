@@ -33,7 +33,8 @@ Imports:
     factoextra,
     cluster,
     ggpubr,
-    gridExtra
+    gridExtra,
+    GenomeInfoDb
 RoxygenNote: 7.2.3
 BugReports: https://github.com/YULEITSINGTAO/SVIV/issues
 URL: https://github.com/YULEITSINGTAO/SVIV

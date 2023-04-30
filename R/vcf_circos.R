@@ -7,6 +7,8 @@
 #'
 #' @examples
 #' vcf_circos(VCF_file)
+#' @noRd
+#'
 vcf_circos <- function(SV_fix){
   ############## Translation table ################
   circos.clear()

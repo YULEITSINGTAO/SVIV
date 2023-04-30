@@ -1,4 +1,3 @@
-#### This function is used to find the nearest gene ###
 #' AnnotateIntervals
 #'
 #' This is function is used to annotate the gene ranges

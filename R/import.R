@@ -37,6 +37,7 @@ utils::globalVariables(c(
 #' @importFrom factoextra fviz_gap_stat get_dist fviz_cluster
 #' @importFrom ggpubr ggarrange
 #' @importFrom gridExtra grid.arrange
+#' @importFrom GenomeInfoDb getChromInfoFromUCSC
 #'
 NULL
 
