@@ -3,14 +3,14 @@
 #' @param reference character, hg19 or hg38
 #' @param tilewidth numeric, size of tile
 #'
-#' @return
+#' @return genomeWindows
 # @export
 #'
 #' @examples
 #' GenomeWindows("hg19", 500000)
 #'
 #' @noRd
-GenomeWindows <- function(reference = c("hg19", "hg38"), tilewidth = 500000){
+genomeWindows <- function(reference = c("hg19", "hg38"), tilewidth = 500000){
 
     chrSizes <- GenomeInfoDb::getChromInfoFromUCSC(reference) %>% dplyr::filter(chrom %in% paste0("chr", c(1:22, "X", "Y")))
     chrSizes <- chrSizes$size

@@ -4,14 +4,15 @@
 #' @param bed_file
 #' @param bin_reference
 #'
-#' @return xxx
+#' @return Counts in each bin
 # @export
 #'
 #' @examples
-#' 1 + 1
-# # Align_to_Bin(bed_file, bin_reference)
-#'
+#' \dontrun{
+#' Align_to_Bin(bed_file, bin_reference)
+#'}
 #'@noRd
+#'
 AlignToBin <- function(bed_file, bin_reference){
 
     B <- bin_reference
