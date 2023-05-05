@@ -12,8 +12,6 @@ Encoding: UTF-8
 Depends:
     R (>= 4.2.0),
 Imports: 
-    circlize,
-    vcfR,
     ggplot2,
     dplyr,
     magrittr,
@@ -34,7 +32,10 @@ Imports:
     cluster,
     ggpubr,
     gridExtra,
-    GenomeInfoDb
+    GenomeInfoDb,
+    GenomicFeatures,
+    scales,
+    intervals
 RoxygenNote: 7.2.3
 BugReports: https://github.com/YULEITSINGTAO/SVIV/issues
 URL: https://github.com/YULEITSINGTAO/SVIV

@@ -77,6 +77,8 @@ unionBedList <- function(bed_list_1, bed_list_2, verbose = FALSE){
 
 #' @rdname unionBedDf
 #' @export
+#' @param bed_list_1 dataframe, bed format dataframe noting one type of the interval mutation
+#' @param bed_list_2 dataframe, bed format dataframe noting one type of the interval mutation
 #'
 '%U%' <- function(bed_list_1, bed_list_2){
     unionBedList(bed_list_1, bed_list_2)

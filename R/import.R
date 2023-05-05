@@ -21,11 +21,11 @@ utils::globalVariables(c(
 #' @importFrom spsUtil msg isFalsy notFalsy
 #' @importFrom glue glue
 #' @importFrom readr read_csv
-#' @importFrom  stats setNames kmeans
-#' @importFrom  tidyr unnest_wider
-#' @importFrom  grDevices colorRampPalette
-#' @importFrom  crayon make_style
-#' @importFrom GenomicRanges tileGenome
+#' @importFrom stats setNames kmeans
+#' @importFrom tidyr unnest_wider
+#' @importFrom grDevices colorRampPalette
+#' @importFrom crayon make_style
+#' @importFrom GenomicRanges tileGenome nearest
 #' @importFrom tibble tibble
 #' @importFrom grDevices rgb
 #' @importFrom methods is
@@ -38,7 +38,9 @@ utils::globalVariables(c(
 #' @importFrom ggpubr ggarrange
 #' @importFrom gridExtra grid.arrange
 #' @importFrom GenomeInfoDb getChromInfoFromUCSC
-#'
+#' @importFrom GenomicFeatures genes
+#' @importFrom scales label_number
+#' @importFrom intervals Intervals interval_union interval_intersection
 NULL
 
 # so strange that colors() is not exported from grDevices on check,

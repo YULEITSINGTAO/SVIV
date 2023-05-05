@@ -4,7 +4,7 @@
 #' @param txdb gene database
 #'
 #' @return translocation gene list
-# @export
+#  @export
 #'
 #' @examples
 #' translocation_gene_list(vcf_list, txdb)

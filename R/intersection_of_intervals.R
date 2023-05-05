@@ -86,6 +86,8 @@ intersectionBedList <- function(bed_list_1, bed_list_2, verbose = FALSE){
 }
 
 #' @rdname intersectionBedDf
+#' @param bed_list_1 dataframe, bed format dataframe noting one type of the interval mutation
+#' @param bed_list_2 dataframe, bed format dataframe noting one type of the interval mutation
 #' @export
 '%I%' <- function(bed_list_1, bed_list_2){
     intersectionBedList(bed_list_1, bed_list_2)

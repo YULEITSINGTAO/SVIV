@@ -27,6 +27,10 @@ Columns:
 }}
 
 \item{verbose}{bool, print verbose information?}
+
+\item{bed_list_1}{dataframe, bed format dataframe noting one type of the interval mutation}
+
+\item{bed_list_2}{dataframe, bed format dataframe noting one type of the interval mutation}
 }
 \value{
 bed_df
