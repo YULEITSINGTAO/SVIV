@@ -16,7 +16,7 @@ utils::globalVariables(c(
 #' @importFrom ggplot2 scale_x_discrete geom_vline ggtitle geom_point scale_color_manual
 #' @importFrom ggplot2 scale_color_manual guide_legend margin scale_shape_manual facet_grid
 #' @importFrom ggplot2 vars scale_x_continuous scale_y_continuous
-#' @importFrom magrittr %>%
+#' @importFrom magrittr "%>%"
 #' @importFrom dplyr filter mutate pull count select distinct
 #' @importFrom spsUtil msg isFalsy notFalsy
 #' @importFrom glue glue

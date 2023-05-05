@@ -35,8 +35,8 @@ bed_df
 Get the intersection of two bed dataframes.
 }
 \examples{
-bed_df_1 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
-bed_df_2 <- data.frame(Chr = c(paste("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
+bed_df_1 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(100, 200, 300), End=c(150, 250, 350))
+bed_df_2 <- data.frame(Chr = c(paste0("chr", c(1,1,1))), Start=c(120, 220, 320), End=c(150, 250, 350))
 intersectionBedDf(bed_df_1, bed_df_2, verbose = FALSE)
 
 }

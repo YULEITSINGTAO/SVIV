@@ -43,7 +43,7 @@ projectTranslocation <- function(translocation_bed){
 #' -Chr_2 and Pos_2: Second breal point chromosome ID and location.
 #'
 #' @return sorted translocation bed dataframe
-# @export
+#' @export
 #'
 #' @examples
 #' translocation_bed <- data.frame(Chr_1 = paste0("chr", c(7, 8, 9, 9, 13, 15)),

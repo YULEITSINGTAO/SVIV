@@ -134,6 +134,7 @@ setColorContinuous <- function(plot_colors = "current", muted = FALSE) {
 }
 
 #' @rdname setColorContinuous
+#' @export
 setColorDiscrete <- function(plot_colors = "current", n = 8, muted = FALSE) {
     stopifnot(is.character(plot_colors))
     stopifnot(is.numeric(n) && length(n) == 1 && n > 0)

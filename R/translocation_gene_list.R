@@ -8,7 +8,7 @@
 #'
 #' @examples
 #' translocation_gene_list(vcf_list, txdb)
-#'
+#' @noRd
 translocation_gene_list <- function(input_vcf_list, txdb){
   translocation_gene_list <- list()
   for (i in 1:length(input_vcf_list)){

@@ -41,6 +41,7 @@
 #' @examples
 #' # plot only when karyoploteR is installed
 #' if(!length(spsUtil::checkNameSpace("karyoploteR", quietly = TRUE))) {
+#'     library(magrittr)
 #'     # read in simulated SV data
 #'     sv <- readr::read_csv(system.file(package = "SVIV","extdata", "Sim_SV.csv"))
 #'     # create a table with 3 patients and each with 2 samples

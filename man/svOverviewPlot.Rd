@@ -91,6 +91,7 @@ Plot SVs across all chromosomes and across all samples on a big segment plot
 \examples{
 
 # read in simulated SV data
+library(magrittr)
 sv <- readr::read_csv(system.file(package = "SVIV","extdata", "Sim_SV.csv"))
 # create a table with 3 patients and each with 2 samples
 # for each sample, we give them 20 random SV events
