@@ -20,7 +20,7 @@ SVtypeList <- function(VCF_list, SV_type){
                 names(bed_Deletion_table) <- c("Chr", "Start", "End")
                 bed_Deletion_table$Start <- as.numeric(bed_Deletion_table$Start)
                 bed_Deletion_table$End <- as.numeric(bed_Deletion_table$End)
-                SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Deletion_table)
+                SVtypeList[[Caller]][[j]] <- bed_Deletion_table
                 }
             }else if (SV_type == "DUP") {
                 for (j in names(VCF_list[[Caller]])){
@@ -32,7 +32,7 @@ SVtypeList <- function(VCF_list, SV_type){
                 names(bed_Duplication_table) <- c("Chr", "Start", "End")
                 bed_Duplication_table$Start <- as.numeric(bed_Duplication_table$Start)
                 bed_Duplication_table$End <- as.numeric(bed_Duplication_table$End)
-                SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Duplication_table)
+                SVtypeList[[Caller]][[j]] <- bed_Duplication_table
                 ############################################################################
                 }
             }else if (SV_type == "INV"){
@@ -43,7 +43,7 @@ SVtypeList <- function(VCF_list, SV_type){
                     names(bed_Inversion_table) <- c("Chr", "Start", "End")
                     bed_Inversion_table$Start <- as.numeric(bed_Inversion_table$Start)
                     bed_Inversion_table$End <- as.numeric(bed_Inversion_table$End)
-                    SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Inversion_table)
+                    SVtypeList[[Caller]][[j]] <- bed_Inversion_table
                 }
 
             }else if (SV_type == "INS"){
@@ -55,7 +55,7 @@ SVtypeList <- function(VCF_list, SV_type){
                     names(bed_Insertion_table) <- c("Chr", "Start", "End")
                     bed_Insertion_table$Start <- as.numeric(bed_Insertion_table$Start)
                     bed_Insertion_table$End <- as.numeric(bed_Insertion_table$End)
-                    SVtypeList[[Caller]][[j]] <- unionBedDf(bed_Insertion_table)
+                    SVtypeList[[Caller]][[j]] <- bed_Insertion_table
                 }
 
             }else if (SV_type == "TRANS"){

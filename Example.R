@@ -7,7 +7,14 @@ library(tidyverse)  # data manipulation
 library(cluster)    # clustering algorithms
 library(factoextra) # clustering algorithms & visualization
 library(gridExtra)
+library(vcfR)
 
+sample_map <- data.frame(patient_ID = c("Sample_1"),
+                         caller1 = c("example/DELLY/CW114.vcf"),
+                         caller2 = c("example/Manta/CW114.vcf"))
+
+
+VCF_List <- readVCFs(sample_map)
 
 ## Make the bed for translocation
 

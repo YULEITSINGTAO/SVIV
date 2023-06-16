@@ -66,32 +66,38 @@ knitr::include_graphics('./Figures/VCF_Comparison_Package_Workflow.png')
 
 ## Sample map file
 
-Usually, in a structure variation detection project, researchers apply multiple callers in same cohorts. Therefore, users need to provide sample mapping data frame to indicate the sample ID and the directory of different callers on different sample. Here we use two callers and two patients as an example.
+Usually, in a structure variation detection project, researchers apply multiple callers in same cohorts. Therefore, users need to provide sample mapping data frame to indicate the sample ID and the directory of different callers on different sample. Here we used four real-life samples from Chronic Lymphocytic Leukemia (CLL) study (phs000879) of two callers (DELLY and Manta) as an example.
 
 **SVIV works based on the individual .vcf file from each caller.**
 
 We define the sample mapping data frame as follow:
 
 ```{r eval= F}
-sample_map <- data.frame(patient_ID = c("Sample_1", "Sample_2"), 
-                         caller1 = c("/user/caller1/sample_1.vcf", 
-                                     "/user/caller1/sample_2.vcf"), 
-                         caller2 = c("/user/caller2/sample_1.vcf", 
-                                     "/user/caller2/sample_1.vcf"))
+sample_map <- data.frame(patient_ID = c("CW114", "CW119", "CW127", "CW176"), 
+                         caller1 = c("PATH/to/example/DELLY/CW114.vcf", 
+                                     "PATH/to/example/DELLY/CW119.vcf",
+                                     "PATH/to/example/DELLY/CW127.vcf",
+                                     "PATH/to/example/DELLY/CW176.vcf"), 
+                         caller2 = c("PATH/to/example/Manta/CW114.vcf", 
+                                     "PATH/to/example/Manta/CW119.vcf",
+                                     "PATH/to/example/Manta/CW127.vcf",
+                                     "PATH/to/example/Manta/CW176.vcf"))
 
 ```
 
-| Sample ID | Caller 1                     | Caller 2                     |
+| Sample ID | DELLY                     | MANTA                     |
 |-----------|------------------------------|------------------------------|
-| Sample_1  | '/user/caller1/sample_1.vcf' | '/user/caller2/sample_1.vcf' |
-| Sample_2  | '/user/caller1/sample_1.vcf' | '/user/caller2/sample_2.vcf' |
+| CW114  | 'PATH/to/example/DELLY/CW114.vcf' | 'PATH/to/example/Manta/CW114.vcf' |
+| CW119  | 'PATH/to/example/DELLY/CW119.vcf' | 'PATH/to/example/Manta/CW119.vcf' |
+| CW127  | 'PATH/to/example/DELLY/CW127.vcf' | 'PATH/to/example/Manta/CW127.vcf' |
+| CW176  | 'PATH/to/example/DELLY/CW176.vcf' | 'PATH/to/example/Manta/CW176.vcf' |
 
 ## Read the vcf files into R.
 
 Based on the sample mapping file, we can read the vcf files into R use the function `Read_VCFs`.
 
 ```{r eval = FALSE}
-VCF_List <- Read_VCFs(sample_map)
+VCF_List <- readVCFs(sample_map)
 ```
 
 VCF List is the basic data type in this package. In a VCF List, it contents all of the partient SV results called by the provided callers. Figure \@ref(fig:str) shows the structure of the VCF list data type.
@@ -119,7 +125,7 @@ There are three fields in a vcf file including meta, info and geno:
 In general case, the caller put the filter infromation in the VCF file to note the confidence of the SV event. To avoid low confident result introduced into the analysis workflow, the first step is to filter the VCF files (i.e. VCF_List). The hard filter step is based on the parameter ("PASS" and "Precise") on each callers. Users can set the "PASS", "Precise" or "Both" to filter the SVs. In this example, we use Both criteria i.e. the calls should pass the read quality criteria and also have split reads support. The package provide the function `hardFilter` to perform the filter procedure.
 
 ```{r eval = FALSE}
-Filtered_VCF_List <- hardFilter(VCF_List, Filter_Standard = "Both")
+Filtered_VCF_List <- hardFilter(VCF_List, filter_standard = "Both")
 ```
 
 ## Extract the SV by type
