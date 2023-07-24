@@ -13,3 +13,7 @@ install_github("YULEITSINGTAO/SVIV")
 
 ## The manual of SVIV
 Please check the vignettes. 
+
+## Citation
+
+Lei Yu ,Le Zhang ,Lili Wang ,Zhenyu Jia. Structural variants integration and visualization: A comprehensive R package for integration of somatic structural variations from multiple callers and visualization. Tumor Discovery 2023, 2(2), 0894. https://doi.org/10.36922/td.0894
