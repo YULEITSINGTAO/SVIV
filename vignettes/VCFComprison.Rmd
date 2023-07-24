@@ -27,7 +27,7 @@ vignette: |
 
 # Introduction
 
-Whole genome sequencing (WGS) is a powerful tool for detecting structure variations (SV) in genomes. Typically, multiple SV callers are applied to a single patient's WGS data to increase the comprehensiveness of the results. However, there is currently a lack of tools to compare and merge the results from different callers. To address this issue, we have developed an R package called SVIV. This package enables users to manipulate SV results from different callers and identify the most confident structure mutations. Furthermore, we propose a projection method for complex translocations, which projects each translocation to a point on Cartesian coordinate system. This is followed by a clustering method to characterize the key translocation information and summarize the translocation mutations for the user. Overall, our approach provides a useful framework for analyzing SVs in WGS data.
+Whole genome sequencing (WGS) is a powerful tool for detecting structure variations (SV) in genomes. Typically, multiple SV callers are applied to a single patient's WGS data to increase the comprehensiveness of the results. However, there is currently a lack of tools to compare and merge the results from different callers. To address this issue, we have developed an R package called SVIV (Structural Variants Integration and Visualization). This package enables users to manipulate SV results from different callers and identify the most confident structure mutations. Furthermore, we propose a projection method for complex translocations, which projects each translocation to a point on Cartesian coordinate system. This is followed by a clustering method to characterize the key translocation information and summarize the translocation mutations for the user. Overall, our approach provides a useful framework for analyzing SVs in WGS data.
 
 ## Install Package
 
@@ -44,15 +44,15 @@ A package only needs to be installed once. Load the package into an R session wi
 library(SVIV)
 ```
 
-## Structure variation
+## Structure Variation
 
 Structure variants (SVs) are large genomic alterations which typically larger than 50 bp. Nowdays, multiple SV callers can detect the structure variation such as DELLY (@rausch2012delly), Manta (@chen2016manta), GRIDSS (@cameron2017gridss), LUMPY (@layer2014lumpy), etc.
 
 A common challenge of SV detection is the large false positive rate. Even each caller can provide the filter parameter to help users to filter the SV calls, we have concerns about the accuracy of the result from only one caller. Therefore, we need to apply the SV calling through multiple callers about combine the result to detect the most consistent calls among callers.
 
-## Type of structure variation
+## Type of Structure Variation
 
-In high-level, the structure variation can be divided into deletion, duplication, insertion, inversion and translocation. When we deal with the structure variation, translocation is the most different structure variation with the others. Deletion, duplication, insertion and inversion can be defined use a range on one chromosome but translocation is defined by two positions on different chromosomes. Therefore, in the SVIV, the methods applied on deletion, duplication, insertion and inversion are different with the methods applied on translocations.
+In high-level, the structure variation can be divided into deletion, duplication, insertion, inversion and translocation. When we deal with the structure variation, translocation is the most different structure variation with the others. Deletion, duplication, insertion and inversion can be defined use a range on one chromosome but translocation is defined by two breakpoints on different chromosomes. Therefore, in the SVIV, the methods applied on deletion, duplication, insertion and inversion are different with the methods applied on translocations.
 
 ## Functions of SVIV
 
@@ -64,9 +64,13 @@ knitr::include_graphics('./Figures/VCF_Comparison_Package_Workflow.png')
 
 # Data Preparation
 
-## Sample map file
+## Example Dataset
 
-Usually, in a structure variation detection project, researchers apply multiple callers in same cohorts. Therefore, users need to provide sample mapping data frame to indicate the sample ID and the directory of different callers on different sample. Here we used four real-life samples from Chronic Lymphocytic Leukemia (CLL) study (phs000879) of two callers (DELLY and Manta) as an example.
+Here we used four real-life samples from Chronic Lymphocytic Leukemia (CLL) study ([phs000879](https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs000879.v2.p1)) of two callers (DELLY and Manta) as an example. The raw fastq file could be downloaded from dbGap with permission then we use DELLY and Manta to call the somatic mutations from samples.
+
+## Samplemap File
+
+Users need to provide sample mapping data frame to indicate the sample ID and the directory of different callers on different sample.
 
 **SVIV works based on the individual .vcf file from each caller.**
 
@@ -85,14 +89,14 @@ sample_map <- data.frame(patient_ID = c("CW114", "CW119", "CW127", "CW176"),
 
 ```
 
-| Sample ID | DELLY                     | MANTA                     |
-|-----------|------------------------------|------------------------------|
-| CW114  | 'PATH/to/example/DELLY/CW114.vcf' | 'PATH/to/example/Manta/CW114.vcf' |
-| CW119  | 'PATH/to/example/DELLY/CW119.vcf' | 'PATH/to/example/Manta/CW119.vcf' |
-| CW127  | 'PATH/to/example/DELLY/CW127.vcf' | 'PATH/to/example/Manta/CW127.vcf' |
-| CW176  | 'PATH/to/example/DELLY/CW176.vcf' | 'PATH/to/example/Manta/CW176.vcf' |
+| Sample ID | DELLY                             | MANTA                             |
+|----------------|----------------------------|----------------------------|
+| CW114     | 'PATH/to/example/DELLY/CW114.vcf' | 'PATH/to/example/Manta/CW114.vcf' |
+| CW119     | 'PATH/to/example/DELLY/CW119.vcf' | 'PATH/to/example/Manta/CW119.vcf' |
+| CW127     | 'PATH/to/example/DELLY/CW127.vcf' | 'PATH/to/example/Manta/CW127.vcf' |
+| CW176     | 'PATH/to/example/DELLY/CW176.vcf' | 'PATH/to/example/Manta/CW176.vcf' |
 
-## Read the vcf files into R.
+## Read the vcf Files into R.
 
 Based on the sample mapping file, we can read the vcf files into R use the function `Read_VCFs`.
 
@@ -106,7 +110,7 @@ VCF List is the basic data type in this package. In a VCF List, it contents all 
 knitr::include_graphics('./Figures/VCF_Structure_List.png')
 ```
 
-## Subtract the useful information from the VCF_list
+## Subtract the Useful Information from the VCF_list
 
 The basic cell of VCF_List is VCF file, we here we provide a brief introduction about VCF file.
 
@@ -128,7 +132,7 @@ In general case, the caller put the filter infromation in the VCF file to note t
 Filtered_VCF_List <- hardFilter(VCF_List, filter_standard = "Both")
 ```
 
-## Extract the SV by type
+## Extract the SV by Type
 
 In this package, we define the structure variation in 5 types which are deletion ("DEL"), duplication ("DUP"), insertion ("INS"), inversion ("INV") and translocation ("TRANS"). In most of the cases, each type of the structure variation is analysised seperately. Therefore, we extract the SV by type conducted by `SVtypeList()`
 
@@ -140,9 +144,9 @@ Inversion_List <- SVtypeList(Filtered_VCF_List, "INV")
 Trans_List <- SVtypeList(Filtered_VCF_List, "TRANS")
 ```
 
-## Merging the callers results of samples
+## Merging the Callers Results of Samples
 
-### Merging deletion, duplication, insertion and inversion.
+### Merging Deletion, Duplication, Insertion and Inversion.
 
 Once the data is filtered and we should merge the result from different callers into a unified SV dataframe. The most common used merging methods are union and intersection. Here we give a mathematical definition of union and intersection of deletion, duplication, insertion and inversion.
 
@@ -164,14 +168,14 @@ knitr::include_graphics('./Figures/Union_and_Intersection.png')
 
 In SVIV, for deletion, duplication, insertion and inversion, the callers combining procedure is performed based on the union and intersection operation on the SV sets. Different from the ordinary union and intersection on whole callers, SVIV give the freedom to users that can select the dominant callers which provide the main result to keep the high accuracy.
 
-Here we use the deletion as an example to sure how the merge works. Caller names were use as  
+Here we use the deletion as an example to sure how the merge works. Caller names were use as
 
 ```{r eval=FALSE}
 Deletion_caller1_List <- Deletion_List$caller1
 Deletion_caller2_List <- Deletion_List$caller2
 ```
 
-In SVIV, we defined two operation which are intersection (%I%) and union (%U%). Users can use these two operations to merge the result. 
+In SVIV, we defined two operation which are intersection (%I%) and union (%U%). Users can use these two operations to merge the result.
 
 ```{r eval=FALSE}
 Deletion_caller1_List %U% Deletion_caller2_List
@@ -179,9 +183,9 @@ Deletion_caller1_List %U% Deletion_caller2_List
 Deletion_caller1_List %I% Deletion_caller2_List
 ```
 
-### Merging translocation
+### Merging Translocation
 
-#### Ways to define translocations
+#### Ways to Define Translocations
 
 A translocation corresponding to two break ends on different chromosomes. We can use $(\textrm{Chromosome}\ i, \textrm{Position}\ m)$ and $(\textrm{Chromosome}\ j, \textrm{Position}\ n)$ to represent two break ends. Therefore, for a translocation event, two break points are detected. For example
 
@@ -210,13 +214,15 @@ knitr::include_graphics('./Figures/Section_1_5_Genome_Translocation_Projection.p
 
 For a translocation, it is a challenging work to merge the translocation from different callers because the translocation inclduding two break ends and that makes it be different from merging the range structure variants.
 
-Here we provide two ways to merge the translocation.
+#### Clustering Based Method
 
-#### Clustering based method
-Since translocation is a type of large scale 
+The SVIV package provide the example translocation dataset to demonstrate the merging strategy:
+
+```{r GenomeTranslocationProjection, fig.cap="Genome Translocation Projection.", echo=FALSE}
+knitr::include_graphics('./Figures/Section_1_5_Genome_Translocation_Projection.png')
+```
 
 # Structure variation visulization
-
 
 # References {.unnumbered}
 
